@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestor de comidas, ingredientes, semanas y compra</title>
+  <style>
+    :root {
+      --bg: #eefaf6;
+      --card: #ffffff;
+      --text: #12302b;
+      --muted: #5d7972;
+      --primary: #0f9f77;
+      --primary-dark: #087057;
+      --secondary: #0ea5c6;
+      --blue: #2563eb;
+      --danger: #c24141;
+      --border: #cfe7df;
+      --soft: #e4f7f1;
+      --soft-blue: #e6f3ff;
+      --ok: #157347;
+      --warning: #b7791f;
+      --shadow: 0 14px 35px rgba(13, 116, 104, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(14, 165, 198, 0.18), transparent 32%),
+        linear-gradient(135deg, #eefaf6 0%, #eaf8ff 100%);
+      color: var(--text);
+      line-height: 1.4;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 32px 20px 74px;
+      background: linear-gradient(135deg, #0f9f77 0%, #0ea5c6 55%, #2563eb 100%);
+      color: white;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      inset: auto -8% -65px -8%;
+      height: 110px;
+      background: rgba(255, 255, 255, 0.16);
+      border-radius: 50% 50% 0 0;
+    }
+
+    header h1, header p { position: relative; z-index: 1; }
+    header h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 4vw, 2.8rem); }
+    header p { margin: 0; opacity: 0.95; }
+
+    main {
+      width: min(1380px, calc(100% - 28px));
+      margin: -42px auto 50px;
+      display: grid;
+      gap: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    h2 { margin: 0 0 14px; font-size: 1.25rem; }
+    h3 { margin: 0 0 8px; }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    input, select, textarea, button { font: inherit; }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 11px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      color: var(--text);
+      outline-color: var(--secondary);
+    }
+
+    input[type="checkbox"] { width: auto; transform: scale(1.15); }
+    textarea { resize: vertical; min-height: 78px; }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 10px 13px;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      font-weight: 800;
+      transition: transform 0.08s ease, filter 0.2s ease;
+    }
+
+    button:hover { filter: brightness(0.94); }
+    button:active { transform: scale(0.98); }
+
+    .secondary { background: linear-gradient(135deg, #64748b, #0ea5c6); }
+    .danger { background: linear-gradient(135deg, var(--danger), #ef4444); }
+    .ghost {
+      background: linear-gradient(135deg, var(--soft), var(--soft-blue));
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .row { display: flex; gap: 8px; align-items: center; }
+    .row > * { flex: 1; }
+    .check-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-weight: 800; }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 13px; }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 8px;
+      padding: 8px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .tab-btn { background: transparent; color: var(--muted); border: 1px solid transparent; }
+    .tab-btn.active {
+      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--blue));
+      box-shadow: 0 8px 18px rgba(14, 165, 198, 0.22);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .two-columns {
+      display: grid;
+      grid-template-columns: minmax(280px, 430px) 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .list { display: grid; gap: 10px; margin-top: 15px; }
+
+    .item {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      background: linear-gradient(135deg, #ffffff, #f3fffb);
+    }
+
+    .item-top { display: flex; justify-content: space-between; gap: 10px; align-items: start; }
+    .item-name { font-weight: 900; font-size: 1rem; }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 99px;
+      background: var(--soft);
+      font-weight: 800;
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
+    .badge.ok { background: #dff8ea; color: var(--ok); }
+    .badge.warn { background: #fff4d7; color: var(--warning); }
+    .badge.zero { background: #fde4e4; color: var(--danger); }
+    .badge.favorite { background: #e0f2fe; color: #0369a1; }
+    .badge.member { background: #dcfce7; color: #166534; }
+    .badge.missing { background: #fee2e2; color: #991b1b; }
+
+    .mini-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .mini-actions button { padding: 7px 9px; font-size: 0.85rem; }
+
+    .muted { color: var(--muted); font-size: 0.9rem; }
+    .help { margin-top: 6px; color: var(--muted); font-size: 0.84rem; }
+
+    .recipe-list {
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .recipe-builder {
+      padding: 12px;
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      background: #f8fffd;
+      margin-top: 12px;
+    }
+
+    .calendar-toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .week-title { font-weight: 900; font-size: 1.1rem; }
+
+    .week-selector {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) repeat(2, minmax(140px, 180px));
+      gap: 8px;
+      align-items: end;
+      margin-bottom: 14px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #f8fffd;
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(150px, 1fr));
+      gap: 10px;
+    }
+
+    .day {
+      min-height: 310px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: linear-gradient(180deg, #ffffff, #f5fffb);
+      padding: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .day h3 { margin: 0; font-size: 1rem; color: var(--primary-dark); }
+    .meal-block { border-top: 1px dashed var(--border); padding-top: 9px; }
+    .meal-block:first-of-type { border-top: 0; padding-top: 0; }
+
+    .meal-title {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 900;
+      color: var(--muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .member-slot { margin-top: 6px; }
+    .member-slot label { margin: 0 0 3px; font-size: 0.72rem; color: var(--primary-dark); }
+    .member-slot select { padding: 8px; border-radius: 10px; font-size: 0.86rem; }
+
+    .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
+
+    .summary-item {
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, #ffffff, #eefaff);
+    }
+
+    .summary-item strong { display: block; }
+
+    .shopping-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .shopping-item input { width: auto; margin-top: 4px; }
+    .shopping-item small { color: var(--muted); display: block; margin-top: 3px; }
+
+    .empty {
+      padding: 14px;
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      text-align: center;
+      color: var(--muted);
+      background: #f8fffd;
+    }
+
+
+    .scanner-box {
+      padding: 12px;
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      background: #f8fffd;
+      margin-top: 12px;
+    }
+
+    .scanner-video {
+      width: 100%;
+      max-height: 280px;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #0f172a;
+      display: none;
+      margin-top: 10px;
+    }
+
+    .budget-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .budget-card {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: linear-gradient(135deg, #ffffff, #e6f3ff);
+    }
+
+    .budget-card strong {
+      display: block;
+      font-size: 1.25rem;
+      color: var(--primary-dark);
+    }
+
+    @media (max-width: 1120px) {
+      .calendar { grid-template-columns: repeat(2, 1fr); }
+      .two-columns { grid-template-columns: 1fr; }
+      .tabs { grid-template-columns: repeat(2, 1fr); }
+      .week-selector { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .calendar { grid-template-columns: 1fr; }
+      .row { flex-direction: column; align-items: stretch; }
+      .tabs { grid-template-columns: 1fr; }
+      .shopping-item { grid-template-columns: auto 1fr; }
+      .shopping-item .badge { grid-column: 2; width: fit-content; }
+    }
+
+    @media print {
+      body { background: white; }
+      header, .tabs, .no-print { display: none !important; }
+      main { width: 100%; margin: 0; }
+      .card { box-shadow: none; border: none; padding: 0; }
+      main > section { display: none !important; }
+      body.print-calendar #panel-calendar,
+      body.print-calendar #summary-card { display: block !important; }
+      body.print-shopping #panel-shopping { display: block !important; }
+      .calendar { grid-template-columns: repeat(7, 1fr); gap: 6px; }
+      .day { min-height: 190px; break-inside: avoid; }
+      select { border: none; appearance: none; padding: 0; background: transparent; }
+      .member-slot select option { display: none; }
+      .shopping-item, .item { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Gestor de comidas, ingredientes y compra</h1>
+    <p>Crea ingredientes, guarda códigos de barras, calcula presupuesto y planifica varias semanas.</p>
+  </header>
+
+  <main>
+    <nav class="tabs no-print" aria-label="Secciones principales">
+      <button type="button" class="tab-btn active" data-tab="ingredients">Ingredientes</button>
+      <button type="button" class="tab-btn" data-tab="scanner">Escáner/Stock</button>
+      <button type="button" class="tab-btn" data-tab="dishes">Platos</button>
+      <button type="button" class="tab-btn" data-tab="weeks">Semanas</button>
+      <button type="button" class="tab-btn" data-tab="favorites">Favoritos</button>
+      <button type="button" class="tab-btn" data-tab="config">Familia y comidas</button>
+      <button type="button" class="tab-btn" data-tab="calendar">Calendario</button>
+      <button type="button" class="tab-btn" data-tab="shopping">Compra</button>
+    </nav>
+
+    <section id="panel-ingredients" class="tab-panel active card">
+      <div class="two-columns">
+        <div>
+          <h2>Inventario de ingredientes</h2>
+          <input type="hidden" id="editingIngredientId" />
+
+          <label for="ingredientName">Ingrediente</label>
+          <input id="ingredientName" placeholder="Ej. Salmorejo, huevo cocido, jamón en tacos, pasta..." />
+
+          <div class="row">
+            <div>
+              <label for="ingredientQty">Cantidad que tengo</label>
+              <input id="ingredientQty" type="number" min="0" step="0.01" value="0" />
+            </div>
+            <div>
+              <label for="ingredientUnit">Unidad</label>
+              <input id="ingredientUnit" placeholder="g, ml, unidades..." value="unidades" />
+            </div>
+          </div>
+
+          <div class="scanner-box">
+            <h3>Códigos de barras y precio</h3>
+            <p class="help">Puedes guardar varios códigos para el mismo ingrediente si lo compras de distintas marcas. También puedes dejarlo vacío para alimentos a granel.</p>
+            <label for="ingredientProducts">Productos asociados</label>
+            <textarea id="ingredientProducts" placeholder="Código | marca | cantidad envase | unidad | precio&#10;8412345678901 | Marca A | 500 | g | 1.35"></textarea>
+            <div class="help">Formato: código | marca | cantidad del envase | unidad | precio. Un producto por línea.</div>
+          </div>
+
+          <label class="check-row">
+            <input id="ingredientAvailable" type="checkbox" checked />
+            Lo tengo en casa
+          </label>
+
+          <div class="actions">
+            <button id="saveIngredientBtn">Añadir ingrediente</button>
+            <button id="cancelIngredientEditBtn" class="secondary" style="display:none">Cancelar edición</button>
+          </div>
+        </div>
+
+        <div>
+          <h2>Ingredientes disponibles</h2>
+          <p class="muted">Los platos consumen estos ingredientes según su receta. Lo que no llegue se añade a la compra.</p>
+          <div id="ingredientList" class="list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-scanner" class="tab-panel card">
+      <div class="two-columns">
+        <div>
+          <h2>Actualizar stock rápido</h2>
+          <p class="muted">Escanea o escribe un código de barras. Si ya está asociado a un ingrediente, se detecta automáticamente. Para alimentos a granel, usa la selección manual.</p>
+
+          <div class="scanner-box">
+            <label for="scanBarcodeInput">Código de barras</label>
+            <input id="scanBarcodeInput" placeholder="Escanea o escribe el código" inputmode="numeric" />
+            <div class="actions">
+              <button id="findBarcodeBtn" class="ghost">Buscar código</button>
+              <button id="startScannerBtn">Usar cámara</button>
+              <button id="stopScannerBtn" class="secondary">Detener cámara</button>
+            </div>
+            <video id="scannerVideo" class="scanner-video" muted playsinline></video>
+            <div id="scannerStatus" class="help">La cámara necesita navegador compatible y permiso de cámara. Si abres el archivo localmente y no funciona, usa la entrada manual.</div>
+          </div>
+
+          <label for="quickIngredientSelect">Ingrediente</label>
+          <select id="quickIngredientSelect"></select>
+
+          <div class="row">
+            <div>
+              <label for="quickBrand">Marca / variante</label>
+              <input id="quickBrand" placeholder="Ej. Hacendado, Gallo, a granel..." />
+            </div>
+            <div>
+              <label for="quickPackages">Unidades compradas</label>
+              <input id="quickPackages" type="number" min="1" step="1" value="1" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="quickPackageQty">Cantidad por envase</label>
+              <input id="quickPackageQty" type="number" min="0" step="0.01" value="1" />
+            </div>
+            <div>
+              <label for="quickPackageUnit">Unidad</label>
+              <input id="quickPackageUnit" placeholder="g, ml, unidades..." />
+            </div>
+          </div>
+
+          <label for="quickPrice">Precio por envase</label>
+          <input id="quickPrice" type="number" min="0" step="0.01" placeholder="Ej. 1.35" />
+
+          <div class="actions">
+            <button id="quickUpdateStockBtn">Sumar al stock</button>
+            <button id="saveBarcodeBtn" class="ghost">Guardar código en ingrediente</button>
+          </div>
+        </div>
+
+        <div>
+          <h2>Códigos guardados</h2>
+          <p class="muted">Un mismo ingrediente puede tener productos de diferentes marcas, formatos o precios.</p>
+          <div id="barcodeList" class="list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-dishes" class="tab-panel card">
+      <div class="two-columns">
+        <div>
+          <h2>Añadir o editar plato</h2>
+          <input type="hidden" id="editingDishId" />
+
+          <label for="dishName">Nombre del plato</label>
+          <input id="dishName" placeholder="Ej. Salmorejo completo" />
+
+          <div class="row">
+            <div>
+              <label for="dishQty">Raciones preparadas</label>
+              <input id="dishQty" type="number" min="0" step="1" value="0" />
+            </div>
+            <div>
+              <label for="dishUnit">Unidad</label>
+              <input id="dishUnit" placeholder="raciones, tuppers..." value="raciones" />
+            </div>
+          </div>
+
+          <div class="recipe-builder">
+            <h3>Ingredientes del plato</h3>
+            <div class="row">
+              <div>
+                <label for="recipeIngredientSelect">Ingrediente</label>
+                <select id="recipeIngredientSelect"></select>
+              </div>
+              <div>
+                <label for="recipeIngredientQty">Cantidad por ración</label>
+                <input id="recipeIngredientQty" type="number" min="0" step="0.01" value="1" />
+              </div>
+            </div>
+            <div class="actions">
+              <button id="addRecipeIngredientBtn" class="ghost">Añadir ingrediente al plato</button>
+            </div>
+            <ul id="currentRecipeList" class="recipe-list"></ul>
+          </div>
+
+          <label for="dishNotes">Notas</label>
+          <textarea id="dishNotes" placeholder="Ej. el plato lleva salmorejo, huevo cocido y jamón en tacos..."></textarea>
+
+          <div class="actions">
+            <button id="saveDishBtn">Añadir plato</button>
+            <button id="cancelDishEditBtn" class="secondary" style="display:none">Cancelar edición</button>
+          </div>
+        </div>
+
+        <div>
+          <h2>Lista de platos</h2>
+          <div id="dishList" class="list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-weeks" class="tab-panel card">
+      <div class="two-columns">
+        <div>
+          <h2>Crear o duplicar semana</h2>
+          <label for="newWeekName">Nombre de la semana</label>
+          <input id="newWeekName" placeholder="Ej. Semana 1 junio, Semana vegetariana, Semana tipo cole..." />
+
+          <div class="actions">
+            <button id="createWeekBtn">Crear semana vacía</button>
+            <button id="duplicateWeekBtn" class="ghost">Duplicar semana actual</button>
+            <button id="makeTypicalWeekBtn" class="secondary">Guardar como semana tipo</button>
+          </div>
+
+          <p class="help">La semana tipo es una plantilla reutilizable. Puedes aplicarla a una semana nueva y después modificarla.</p>
+
+          <label for="applyTypicalName">Crear semana desde semana tipo</label>
+          <input id="applyTypicalName" placeholder="Ej. Semana del 10 al 16 de junio" />
+          <div class="actions">
+            <button id="applyTypicalWeekBtn">Crear desde semana tipo</button>
+          </div>
+        </div>
+
+        <div>
+          <h2>Semanas guardadas</h2>
+          <p class="muted">Selecciona una semana para editarla en el calendario. Cada semana conserva su propia planificación.</p>
+          <div id="weekList" class="list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-favorites" class="tab-panel card">
+      <h2>Favoritos</h2>
+      <p class="muted">Guarda platos habituales como favoritos para localizarlos rápido. Los favoritos conservan la receta del plato.</p>
+      <div id="favoriteList" class="list"></div>
+    </section>
+
+    <section id="panel-config" class="tab-panel card">
+      <div class="two-columns">
+        <div>
+          <h2>Miembros del núcleo familiar</h2>
+          <label for="memberName">Nombre del miembro</label>
+          <input id="memberName" placeholder="Ej. Virginia, Leo, Mamá..." />
+          <div class="actions"><button id="addMemberBtn">Añadir miembro</button></div>
+          <div id="memberList" class="list"></div>
+        </div>
+
+        <div>
+          <h2>Tipos de comida</h2>
+          <label for="mealName">Nombre de la comida</label>
+          <input id="mealName" placeholder="Ej. Desayuno, Merienda, Cena..." />
+          <div class="actions"><button id="addMealBtn">Añadir tipo de comida</button></div>
+          <div id="mealList" class="list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-calendar" class="tab-panel card">
+      <div class="calendar-toolbar">
+        <div>
+          <div class="week-title">Planificador semanal</div>
+          <div id="activeWeekInfo" class="muted"></div>
+        </div>
+        <div class="actions no-print">
+          <button id="clearPlanBtn" class="ghost">Vaciar esta semana</button>
+          <button id="printCalendarBtn">Exportar calendario a PDF</button>
+        </div>
+      </div>
+
+      <div class="week-selector no-print">
+        <div>
+          <label for="activeWeekSelect">Semana activa</label>
+          <select id="activeWeekSelect"></select>
+        </div>
+        <div>
+          <label for="renameWeekInput">Renombrar</label>
+          <input id="renameWeekInput" placeholder="Nuevo nombre" />
+        </div>
+        <div class="actions">
+          <button id="renameWeekBtn" class="ghost">Guardar nombre</button>
+        </div>
+      </div>
+
+      <div id="calendar" class="calendar"></div>
+    </section>
+
+    <section id="panel-shopping" class="tab-panel card">
+      <div class="calendar-toolbar">
+        <div>
+          <div class="week-title">Lista de la compra</div>
+          <div id="shoppingWeekInfo" class="muted"></div>
+        </div>
+        <div class="actions no-print">
+          <button id="copyShoppingBtn" class="ghost">Copiar lista</button>
+          <button id="shareShoppingBtn" class="ghost">Compartir / enviar a Tasks</button>
+          <button id="printShoppingBtn">Exportar compra a PDF</button>
+        </div>
+      </div>
+      <div id="budgetSummary" class="budget-box"></div>
+      <div id="shoppingList" class="list"></div>
+    </section>
+
+    <section id="summary-card" class="card">
+      <h2>Resumen de la semana activa</h2>
+      <div id="summary" class="summary"></div>
+    </section>
+  </main>
+
+  <script>
+    const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+
+    function createId() {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") return window.crypto.randomUUID();
+      return "id-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
+    }
+
+    function loadArray(key, fallback) {
+      try {
+        const saved = JSON.parse(localStorage.getItem(key));
+        return Array.isArray(saved) ? saved : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function loadObject(key, fallback) {
+      try {
+        const saved = JSON.parse(localStorage.getItem(key));
+        return saved && typeof saved === "object" && !Array.isArray(saved) ? saved : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function migrateOldPlanToWeeks() {
+      const oldPlan = loadObject("weeklyPlan", {});
+      const defaultWeek = {
+        id: createId(),
+        name: "Semana actual",
+        plan: oldPlan,
+        createdAt: new Date().toISOString(),
+        isTypical: false
+      };
+      return [defaultWeek];
+    }
+
+    let ingredients = loadArray("ingredients", [
+      { id: createId(), name: "Salmorejo", qty: 1, unit: "ración", available: true, products: [] },
+      { id: createId(), name: "Huevo cocido", qty: 2, unit: "unidades", available: true, products: [] },
+      { id: createId(), name: "Jamón en tacos", qty: 80, unit: "g", available: true, products: [] },
+      { id: createId(), name: "Pasta", qty: 0, unit: "g", available: false, products: [{ barcode: "", brand: "A granel", packageQty: 1000, packageUnit: "g", price: 1.50 }] }
+    ]).map(normalizeIngredient);
+
+    let dishes = loadArray("dishes", []).map(normalizeDish);
+    if (dishes.length === 0) {
+      const salmorejo = ingredients.find(i => i.name === "Salmorejo");
+      const huevo = ingredients.find(i => i.name === "Huevo cocido");
+      const jamon = ingredients.find(i => i.name === "Jamón en tacos");
+      dishes = [{
+        id: createId(),
+        name: "Salmorejo completo",
+        qty: 0,
+        unit: "raciones",
+        notes: "Compuesto por salmorejo, huevo cocido y jamón en tacos.",
+        recipe: [
+          { ingredientId: salmorejo.id, qty: 1 },
+          { ingredientId: huevo.id, qty: 1 },
+          { ingredientId: jamon.id, qty: 40 }
+        ]
+      }];
+    }
+
+    let weeks = loadArray("savedWeeks", migrateOldPlanToWeeks()).map(normalizeWeek);
+    let activeWeekId = localStorage.getItem("activeWeekId") || (weeks[0] ? weeks[0].id : "");
+    if (!weeks.some(week => week.id === activeWeekId)) activeWeekId = weeks[0]?.id || "";
+    let typicalWeekPlan = loadObject("typicalWeekPlan", null);
+
+    let favoriteIds = loadArray("favoriteDishIds", []);
+    let familyMembers = loadArray("familyMembers", [{ id: createId(), name: "Todos" }]);
+    let mealTypes = loadArray("mealTypes", [{ id: createId(), name: "Comida" }, { id: createId(), name: "Cena" }]);
+    let currentRecipe = [];
+
+    const editingIngredientId = document.getElementById("editingIngredientId");
+    const ingredientName = document.getElementById("ingredientName");
+    const ingredientQty = document.getElementById("ingredientQty");
+    const ingredientUnit = document.getElementById("ingredientUnit");
+    const ingredientProducts = document.getElementById("ingredientProducts");
+    const ingredientAvailable = document.getElementById("ingredientAvailable");
+    const saveIngredientBtn = document.getElementById("saveIngredientBtn");
+    const cancelIngredientEditBtn = document.getElementById("cancelIngredientEditBtn");
+    const ingredientList = document.getElementById("ingredientList");
+
+    const editingDishId = document.getElementById("editingDishId");
+    const dishName = document.getElementById("dishName");
+    const dishQty = document.getElementById("dishQty");
+    const dishUnit = document.getElementById("dishUnit");
+    const dishNotes = document.getElementById("dishNotes");
+    const recipeIngredientSelect = document.getElementById("recipeIngredientSelect");
+    const recipeIngredientQty = document.getElementById("recipeIngredientQty");
+    const currentRecipeList = document.getElementById("currentRecipeList");
+    const saveDishBtn = document.getElementById("saveDishBtn");
+    const cancelDishEditBtn = document.getElementById("cancelDishEditBtn");
+    const dishList = document.getElementById("dishList");
+    const favoriteList = document.getElementById("favoriteList");
+
+    const memberName = document.getElementById("memberName");
+    const mealName = document.getElementById("mealName");
+    const memberList = document.getElementById("memberList");
+    const mealList = document.getElementById("mealList");
+    const calendar = document.getElementById("calendar");
+    const shoppingList = document.getElementById("shoppingList");
+    const summary = document.getElementById("summary");
+    const quickIngredientSelect = document.getElementById("quickIngredientSelect");
+    const scanBarcodeInput = document.getElementById("scanBarcodeInput");
+    const quickBrand = document.getElementById("quickBrand");
+    const quickPackages = document.getElementById("quickPackages");
+    const quickPackageQty = document.getElementById("quickPackageQty");
+    const quickPackageUnit = document.getElementById("quickPackageUnit");
+    const quickPrice = document.getElementById("quickPrice");
+    const barcodeList = document.getElementById("barcodeList");
+    const scannerVideo = document.getElementById("scannerVideo");
+    const scannerStatus = document.getElementById("scannerStatus");
+    const budgetSummary = document.getElementById("budgetSummary");
+    let scannerStream = null;
+    let scannerTimer = null;
+
+    const newWeekName = document.getElementById("newWeekName");
+    const applyTypicalName = document.getElementById("applyTypicalName");
+    const weekList = document.getElementById("weekList");
+    const activeWeekSelect = document.getElementById("activeWeekSelect");
+    const renameWeekInput = document.getElementById("renameWeekInput");
+    const activeWeekInfo = document.getElementById("activeWeekInfo");
+    const shoppingWeekInfo = document.getElementById("shoppingWeekInfo");
+
+    function normalizeIngredient(item) {
+      return {
+        id: item.id || createId(),
+        name: item.name || "Ingrediente",
+        qty: Number(item.qty) || 0,
+        unit: item.unit || "unidades",
+        available: item.available !== false,
+        products: Array.isArray(item.products) ? item.products.map(normalizeProduct).filter(Boolean) : []
+      };
+    }
+
+    function normalizeProduct(product) {
+      if (!product || typeof product !== "object") return null;
+      return {
+        barcode: String(product.barcode || "").trim(),
+        brand: product.brand || "",
+        packageQty: Number(product.packageQty) || 0,
+        packageUnit: product.packageUnit || "unidades",
+        price: Number(product.price) || 0
+      };
+    }
+
+    function parseProducts(text) {
+      return text.split("\n")
+        .map(line => line.trim())
+        .filter(Boolean)
+        .map(line => {
+          const parts = line.split("|").map(part => part.trim());
+          return normalizeProduct({
+            barcode: parts[0] || "",
+            brand: parts[1] || "",
+            packageQty: Number(String(parts[2] || "0").replace(",", ".")) || 0,
+            packageUnit: parts[3] || "unidades",
+            price: Number(String(parts[4] || "0").replace(",", ".")) || 0
+          });
+        })
+        .filter(product => product && (product.barcode || product.brand || product.packageQty || product.price));
+    }
+
+    function stringifyProducts(products) {
+      return (products || []).map(product => `${product.barcode || ""} | ${product.brand || ""} | ${product.packageQty || 0} | ${product.packageUnit || "unidades"} | ${product.price || 0}`).join("\n");
+    }
+
+    function findBarcode(barcode) {
+      const normalized = String(barcode || "").trim();
+      if (!normalized) return null;
+      for (const ingredient of ingredients) {
+        const product = (ingredient.products || []).find(item => item.barcode === normalized);
+        if (product) return { ingredient, product };
+      }
+      return null;
+    }
+
+    function sameUnit(a, b) {
+      return String(a || "").trim().toLowerCase() === String(b || "").trim().toLowerCase();
+    }
+
+    function bestProductForIngredient(ingredient) {
+      const products = (ingredient.products || []).filter(product => product.price > 0 && product.packageQty > 0 && sameUnit(product.packageUnit, ingredient.unit));
+      if (!products.length) return null;
+      return products.slice().sort((a, b) => (a.price / a.packageQty) - (b.price / b.packageQty))[0];
+    }
+
+
+    function normalizeDish(item) {
+      return {
+        id: item.id || createId(),
+        name: item.name || "Plato",
+        qty: Number(item.qty) || 0,
+        unit: item.unit || "raciones",
+        notes: item.notes || "",
+        recipe: Array.isArray(item.recipe) ? item.recipe : []
+      };
+    }
+
+    function normalizeWeek(item) {
+      return {
+        id: item.id || createId(),
+        name: item.name || "Semana sin nombre",
+        plan: item.plan && typeof item.plan === "object" ? item.plan : {},
+        createdAt: item.createdAt || new Date().toISOString(),
+        isTypical: item.isTypical === true
+      };
+    }
+
+    function getActiveWeek() {
+      if (!weeks.length) {
+        const week = normalizeWeek({ name: "Semana actual", plan: {} });
+        weeks.push(week);
+        activeWeekId = week.id;
+      }
+      let week = weeks.find(item => item.id === activeWeekId);
+      if (!week) {
+        week = weeks[0];
+        activeWeekId = week.id;
+      }
+      return week;
+    }
+
+    function getPlan() {
+      return getActiveWeek().plan;
+    }
+
+    function setPlan(plan) {
+      getActiveWeek().plan = plan;
+    }
+
+    function saveData() {
+      localStorage.setItem("ingredients", JSON.stringify(ingredients));
+      localStorage.setItem("dishes", JSON.stringify(dishes));
+      localStorage.setItem("favoriteDishIds", JSON.stringify(favoriteIds));
+      localStorage.setItem("familyMembers", JSON.stringify(familyMembers));
+      localStorage.setItem("mealTypes", JSON.stringify(mealTypes));
+      localStorage.setItem("savedWeeks", JSON.stringify(weeks));
+      localStorage.setItem("activeWeekId", activeWeekId);
+      localStorage.setItem("typicalWeekPlan", JSON.stringify(typicalWeekPlan));
+    }
+
+    function makeSlotId(day, mealId, memberId) { return `${day}__${mealId}__${memberId}`; }
+
+    function getPlannedDishCounts(plan = getPlan()) {
+      const counts = {};
+      Object.values(plan).forEach(dishId => {
+        if (!dishId) return;
+        counts[dishId] = (counts[dishId] || 0) + 1;
+      });
+      return counts;
+    }
+
+    function getDishRemaining(dishId) {
+      const dish = dishes.find(item => item.id === dishId);
+      if (!dish) return 0;
+      return dish.qty - (getPlannedDishCounts()[dishId] || 0);
+    }
+
+    function getIngredientRequiredFromPlan(plan = getPlan()) {
+      const planned = getPlannedDishCounts(plan);
+      const required = {};
+      dishes.forEach(dish => {
+        const used = planned[dish.id] || 0;
+        if (used <= 0) return;
+        const servingsToCook = Math.max(0, used - dish.qty);
+        if (servingsToCook <= 0) return;
+        dish.recipe.forEach(row => {
+          const ingredient = ingredients.find(item => item.id === row.ingredientId);
+          if (!ingredient) return;
+          const key = ingredient.id;
+          if (!required[key]) required[key] = { ingredient, qty: 0, dishDetails: [] };
+          const amount = servingsToCook * (Number(row.qty) || 0);
+          required[key].qty += amount;
+          required[key].dishDetails.push(`${dish.name}: ${formatNumber(amount)} ${ingredient.unit}`);
+        });
+      });
+      return required;
+    }
+
+    function cleanPlan() {
+      const validDishIds = new Set(dishes.map(dish => dish.id));
+      const validMealIds = new Set(mealTypes.map(meal => meal.id));
+      const validMemberIds = new Set(familyMembers.map(member => member.id));
+      weeks.forEach(week => {
+        Object.keys(week.plan).forEach(slot => {
+          const parts = slot.split("__");
+          if (!validDishIds.has(week.plan[slot]) || !validMealIds.has(parts[1]) || !validMemberIds.has(parts[2])) {
+            delete week.plan[slot];
+          }
+        });
+      });
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.tab === tabName));
+      document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.toggle("active", panel.id === `panel-${tabName}`));
+    }
+
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", () => switchTab(btn.dataset.tab)));
+
+    function renderWeekControls() {
+      const active = getActiveWeek();
+      activeWeekInfo.textContent = `Editando: ${active.name}${active.isTypical ? " · Semana tipo" : ""}`;
+      shoppingWeekInfo.textContent = `Compra calculada para: ${active.name}`;
+      activeWeekSelect.innerHTML = "";
+      weeks.forEach(week => {
+        const option = document.createElement("option");
+        option.value = week.id;
+        option.textContent = `${week.name}${week.isTypical ? " · semana tipo" : ""}`;
+        if (week.id === activeWeekId) option.selected = true;
+        activeWeekSelect.appendChild(option);
+      });
+      renameWeekInput.value = active.name;
+
+      weekList.innerHTML = "";
+      weeks.forEach(week => {
+        const div = document.createElement("div");
+        div.className = "item";
+        const plannedCount = Object.values(week.plan).filter(Boolean).length;
+        div.innerHTML = `
+          <div class="item-top">
+            <div>
+              <div class="item-name">${escapeHtml(week.name)} ${week.isTypical ? '<span class="badge favorite">Semana tipo</span>' : ""}</div>
+              <div class="muted">${plannedCount} comidas planificadas</div>
+            </div>
+            <span class="badge ${week.id === activeWeekId ? "ok" : "favorite"}">${week.id === activeWeekId ? "Activa" : "Guardada"}</span>
+          </div>
+          <div class="mini-actions">
+            <button class="ghost" onclick="selectWeek('${week.id}')">Editar</button>
+            <button class="ghost" onclick="duplicateWeek('${week.id}')">Duplicar</button>
+            <button class="secondary" onclick="markTypicalWeek('${week.id}')">Marcar como tipo</button>
+            <button class="danger" onclick="deleteWeek('${week.id}')">Eliminar</button>
+          </div>`;
+        weekList.appendChild(div);
+      });
+    }
+
+    function renderIngredientSelect() {
+      recipeIngredientSelect.innerHTML = "";
+      quickIngredientSelect.innerHTML = "";
+      if (ingredients.length === 0) {
+        recipeIngredientSelect.innerHTML = '<option value="">Añade ingredientes primero</option>';
+        quickIngredientSelect.innerHTML = '<option value="">Añade ingredientes primero</option>';
+        return;
+      }
+      ingredients.forEach(ingredient => {
+        const option = document.createElement("option");
+        option.value = ingredient.id;
+        option.textContent = `${ingredient.name} (${ingredient.unit})`;
+        recipeIngredientSelect.appendChild(option);
+        const quickOption = document.createElement("option");
+        quickOption.value = ingredient.id;
+        quickOption.textContent = `${ingredient.name} (${ingredient.unit})`;
+        quickIngredientSelect.appendChild(quickOption);
+      });
+    }
+
+    function renderCurrentRecipe() {
+      currentRecipeList.innerHTML = "";
+      if (currentRecipe.length === 0) {
+        currentRecipeList.innerHTML = '<li>No hay ingredientes añadidos al plato.</li>';
+        return;
+      }
+      currentRecipe.forEach((row, index) => {
+        const ingredient = ingredients.find(item => item.id === row.ingredientId);
+        const li = document.createElement("li");
+        li.innerHTML = `${escapeHtml(ingredient ? ingredient.name : "Ingrediente eliminado")}: ${formatNumber(row.qty)} ${escapeHtml(ingredient ? ingredient.unit : "")} por ración <button class="danger" style="padding:3px 7px;margin-left:6px" onclick="removeRecipeIngredient(${index})">Quitar</button>`;
+        currentRecipeList.appendChild(li);
+      });
+    }
+
+    function renderIngredients() {
+      ingredientList.innerHTML = "";
+      if (ingredients.length === 0) {
+        ingredientList.innerHTML = '<div class="empty">Añade ingredientes para crear platos.</div>';
+        return;
+      }
+      const required = getIngredientRequiredFromPlan();
+      ingredients.forEach(ingredient => {
+        const needed = required[ingredient.id]?.qty || 0;
+        const available = ingredient.available ? ingredient.qty : 0;
+        const remaining = available - needed;
+        const badgeClass = remaining < 0 ? "zero" : remaining === 0 ? "warn" : "ok";
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <div class="item-top">
+            <div>
+              <div class="item-name">${escapeHtml(ingredient.name)}</div>
+              <div class="muted">Tienes: ${ingredient.available ? formatNumber(ingredient.qty) : "0"} ${escapeHtml(ingredient.unit)} · Necesario para cocinar esta semana: ${formatNumber(needed)} ${escapeHtml(ingredient.unit)}</div>
+              <div class="muted">${ingredient.available ? "Marcado como disponible" : "Marcado como no disponible"}</div>
+              ${(ingredient.products || []).length ? `<ul class="recipe-list">${ingredient.products.map(product => `<li>${escapeHtml(product.brand || "Producto")} ${product.barcode ? "· " + escapeHtml(product.barcode) : ""}: ${formatNumber(product.packageQty)} ${escapeHtml(product.packageUnit)} · ${formatCurrency(product.price)}</li>`).join("")}</ul>` : `<div class="muted">Sin códigos de barras asociados.</div>`}
+            </div>
+            <span class="badge ${badgeClass}">${remaining >= 0 ? formatNumber(remaining) + " quedan" : "faltan " + formatNumber(Math.abs(remaining))}</span>
+          </div>
+          <div class="mini-actions">
+            <button class="ghost" onclick="editIngredient('${ingredient.id}')">Editar</button>
+            <button class="danger" onclick="deleteIngredient('${ingredient.id}')">Eliminar</button>
+          </div>`;
+        ingredientList.appendChild(div);
+      });
+    }
+
+    function renderDishes() {
+      dishList.innerHTML = "";
+      if (dishes.length === 0) {
+        dishList.innerHTML = '<div class="empty">Añade platos para planificar el calendario.</div>';
+        return;
+      }
+      const planned = getPlannedDishCounts();
+      dishes.forEach(dish => {
+        const used = planned[dish.id] || 0;
+        const remaining = dish.qty - used;
+        const badgeClass = remaining < 0 ? "zero" : remaining === 0 ? "warn" : "ok";
+        const recipeHtml = dish.recipe.length ? `<ul class="recipe-list">${dish.recipe.map(row => {
+          const ing = ingredients.find(i => i.id === row.ingredientId);
+          return `<li>${escapeHtml(ing ? ing.name : "Ingrediente eliminado")}: ${formatNumber(row.qty)} ${escapeHtml(ing ? ing.unit : "")} por ración</li>`;
+        }).join("")}</ul>` : '<div class="muted">Sin receta asociada.</div>';
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <div class="item-top">
+            <div>
+              <div class="item-name">${escapeHtml(dish.name)} ${favoriteIds.includes(dish.id) ? '<span class="badge favorite">Favorito</span>' : ''}</div>
+              <div class="muted">Raciones preparadas: ${dish.qty} ${escapeHtml(dish.unit)} · Planificadas esta semana: ${used}</div>
+              ${dish.notes ? `<div class="muted">${escapeHtml(dish.notes)}</div>` : ""}
+            </div>
+            <span class="badge ${badgeClass}">${remaining >= 0 ? remaining + " quedan" : "faltan " + Math.abs(remaining)}</span>
+          </div>
+          ${recipeHtml}
+          <div class="mini-actions">
+            <button class="ghost" onclick="editDish('${dish.id}')">Editar</button>
+            <button class="ghost" onclick="toggleFavorite('${dish.id}')">${favoriteIds.includes(dish.id) ? "Quitar favorito" : "Favorito"}</button>
+            <button class="danger" onclick="deleteDish('${dish.id}')">Eliminar</button>
+          </div>`;
+        dishList.appendChild(div);
+      });
+    }
+
+    function renderFavorites() {
+      favoriteList.innerHTML = "";
+      const favorites = dishes.filter(dish => favoriteIds.includes(dish.id));
+      if (favorites.length === 0) {
+        favoriteList.innerHTML = '<div class="empty">Todavía no tienes platos favoritos.</div>';
+        return;
+      }
+      favorites.forEach(dish => {
+        const div = document.createElement("div");
+        div.className = "item";
+        const recipeHtml = dish.recipe.length ? `<ul class="recipe-list">${dish.recipe.map(row => {
+          const ing = ingredients.find(i => i.id === row.ingredientId);
+          return `<li>${escapeHtml(ing ? ing.name : "Ingrediente eliminado")}: ${formatNumber(row.qty)} ${escapeHtml(ing ? ing.unit : "")} por ración</li>`;
+        }).join("")}</ul>` : '<div class="muted">Sin receta asociada.</div>';
+        div.innerHTML = `<div class="item-top"><div><div class="item-name">${escapeHtml(dish.name)}</div><div class="muted">${escapeHtml(dish.notes || "Plato habitual")}</div></div><span class="badge favorite">Favorito</span></div>${recipeHtml}<div class="mini-actions"><button class="ghost" onclick="editDish('${dish.id}')">Editar plato</button><button class="danger" onclick="toggleFavorite('${dish.id}')">Quitar favorito</button></div>`;
+        favoriteList.appendChild(div);
+      });
+    }
+
+    function renderConfig() {
+      memberList.innerHTML = "";
+      mealList.innerHTML = "";
+      familyMembers.forEach(member => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `<div class="item-top"><div class="item-name">${escapeHtml(member.name)}</div><span class="badge member">Miembro</span></div><div class="mini-actions"><button class="danger" onclick="deleteMember('${member.id}')">Eliminar</button></div>`;
+        memberList.appendChild(div);
+      });
+      mealTypes.forEach(meal => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `<div class="item-top"><div class="item-name">${escapeHtml(meal.name)}</div><span class="badge favorite">Comida</span></div><div class="mini-actions"><button class="danger" onclick="deleteMeal('${meal.id}')">Eliminar</button></div>`;
+        mealList.appendChild(div);
+      });
+    }
+
+    function renderCalendar() {
+      calendar.innerHTML = "";
+      if (mealTypes.length === 0 || familyMembers.length === 0 || dishes.length === 0) {
+        calendar.innerHTML = '<div class="empty">Añade platos, miembros y tipos de comida para crear el calendario.</div>';
+        return;
+      }
+      const plan = getPlan();
+      days.forEach(day => {
+        const dayDiv = document.createElement("div");
+        dayDiv.className = "day";
+        dayDiv.innerHTML = `<h3>${day}</h3>`;
+        mealTypes.forEach(meal => {
+          const mealBlock = document.createElement("div");
+          mealBlock.className = "meal-block";
+          mealBlock.innerHTML = `<span class="meal-title">${escapeHtml(meal.name)}</span>`;
+          familyMembers.forEach(member => {
+            const slotId = makeSlotId(day, meal.id, member.id);
+            const selectedDishId = plan[slotId] || "";
+            const memberSlot = document.createElement("div");
+            memberSlot.className = "member-slot";
+            const label = document.createElement("label");
+            label.textContent = member.name;
+            memberSlot.appendChild(label);
+            const select = document.createElement("select");
+            select.dataset.slot = slotId;
+            select.innerHTML = `<option value="">Sin asignar</option>`;
+            dishes.forEach(dish => {
+              const remaining = getDishRemaining(dish.id);
+              const option = document.createElement("option");
+              option.value = dish.id;
+              option.textContent = `${dish.name} (${remaining >= 0 ? remaining + " preparadas" : "cocinar " + Math.abs(remaining)})`;
+              if (selectedDishId === dish.id) option.selected = true;
+              select.appendChild(option);
+            });
+            select.addEventListener("change", event => {
+              const activePlan = getPlan();
+              if (event.target.value) activePlan[event.target.dataset.slot] = event.target.value;
+              else delete activePlan[event.target.dataset.slot];
+              saveData();
+              renderAll();
+            });
+            memberSlot.appendChild(select);
+            mealBlock.appendChild(memberSlot);
+          });
+          dayDiv.appendChild(mealBlock);
+        });
+        calendar.appendChild(dayDiv);
+      });
+    }
+
+    function buildShoppingList() {
+      const planned = getPlannedDishCounts();
+      const items = [];
+      const ingredientNeeds = {};
+      dishes.forEach(dish => {
+        const used = planned[dish.id] || 0;
+        if (used <= 0) return;
+        const servingsToCook = Math.max(0, used - dish.qty);
+        if (servingsToCook > 0 && dish.recipe.length === 0) {
+          items.push({ name: dish.name, qty: servingsToCook, unit: dish.unit, type: "Plato sin stock", detail: `Planificado ${used}, preparado ${dish.qty}. No tiene receta para calcular ingredientes.`, estimatedCost: 0 });
+        }
+        dish.recipe.forEach(row => {
+          const ingredient = ingredients.find(item => item.id === row.ingredientId);
+          if (!ingredient || servingsToCook <= 0) return;
+          if (!ingredientNeeds[ingredient.id]) ingredientNeeds[ingredient.id] = { ingredient, required: 0, details: [] };
+          const amount = servingsToCook * (Number(row.qty) || 0);
+          ingredientNeeds[ingredient.id].required += amount;
+          ingredientNeeds[ingredient.id].details.push(`${dish.name}: ${servingsToCook} ración/es × ${formatNumber(row.qty)} ${ingredient.unit}`);
+        });
+      });
+      Object.values(ingredientNeeds).forEach(row => {
+        const available = row.ingredient.available ? row.ingredient.qty : 0;
+        const missing = Math.max(0, row.required - available);
+        if (missing > 0) {
+          const bestProduct = bestProductForIngredient(row.ingredient);
+          const estimatedCost = bestProduct ? missing * (bestProduct.price / bestProduct.packageQty) : 0;
+          items.push({ name: row.ingredient.name, qty: missing, unit: row.ingredient.unit, type: "Ingrediente", detail: `Necesitas ${formatNumber(row.required)} y tienes ${formatNumber(available)}. ${row.details.join(" · ")}`, ingredientId: row.ingredient.id, estimatedCost, priceSource: bestProduct ? `${bestProduct.brand || "Producto"}: ${formatCurrency(bestProduct.price)} / ${formatNumber(bestProduct.packageQty)} ${bestProduct.packageUnit}` : "Sin precio compatible" });
+        }
+      });
+      return items;
+    }
+
+    function shoppingText() {
+      const active = getActiveWeek();
+      const items = buildShoppingList();
+      if (items.length === 0) return `Lista de la compra · ${active.name}\n\nNo falta nada según la planificación actual.`;
+      const total = items.reduce((sum, item) => sum + (Number(item.estimatedCost) || 0), 0);
+      return `Lista de la compra · ${active.name}\nPresupuesto estimado: ${formatCurrency(total)}\n\n` + items.map(item => `- ${item.name}: ${formatNumber(item.qty)} ${item.unit} (${item.type})${item.estimatedCost ? " · aprox. " + formatCurrency(item.estimatedCost) : ""}`).join("\n");
+    }
+
+    function renderShoppingList() {
+      const items = buildShoppingList();
+      shoppingList.innerHTML = "";
+      const total = items.reduce((sum, item) => sum + (Number(item.estimatedCost) || 0), 0);
+      const pricedItems = items.filter(item => Number(item.estimatedCost) > 0).length;
+      budgetSummary.innerHTML = `<div class="budget-card"><span class="muted">Presupuesto estimado</span><strong>${formatCurrency(total)}</strong></div><div class="budget-card"><span class="muted">Artículos con precio</span><strong>${pricedItems} / ${items.length}</strong></div>`;
+      if (items.length === 0) {
+        budgetSummary.innerHTML = `<div class="budget-card"><span class="muted">Presupuesto estimado</span><strong>0,00 €</strong></div>`;
+        shoppingList.innerHTML = '<div class="empty">No falta nada según la planificación actual.</div>';
+        return;
+      }
+      items.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "item shopping-item";
+        div.innerHTML = `<input type="checkbox" /><div><strong>${escapeHtml(item.name)}</strong><div>${formatNumber(item.qty)} ${escapeHtml(item.unit)}${item.estimatedCost ? " · aprox. " + formatCurrency(item.estimatedCost) : ""}</div><small>${escapeHtml(item.detail)}</small><small>${escapeHtml(item.priceSource || "")}</small></div><span class="badge missing">${escapeHtml(item.type)}</span>`;
+        shoppingList.appendChild(div);
+      });
+    }
+
+    function renderSummary() {
+      summary.innerHTML = "";
+      const planned = getPlannedDishCounts();
+      dishes.forEach(dish => {
+        const used = planned[dish.id] || 0;
+        const remaining = dish.qty - used;
+        const div = document.createElement("div");
+        div.className = "summary-item";
+        div.innerHTML = `<strong>${escapeHtml(dish.name)}</strong><span>${remaining >= 0 ? remaining + " " + dish.unit + " preparadas restantes" : "hay que cocinar " + Math.abs(remaining) + " " + dish.unit}</span>`;
+        summary.appendChild(div);
+      });
+      if (dishes.length === 0) summary.innerHTML = '<div class="empty">Añade platos para ver el resumen.</div>';
+    }
+
+    function renderAll() {
+      cleanPlan();
+      renderWeekControls();
+      renderIngredientSelect();
+      renderCurrentRecipe();
+      renderIngredients();
+      renderBarcodeList();
+      renderDishes();
+      renderFavorites();
+      renderConfig();
+      renderCalendar();
+      renderShoppingList();
+      renderSummary();
+      saveData();
+    }
+
+    function resetIngredientForm() {
+      editingIngredientId.value = "";
+      ingredientName.value = "";
+      ingredientQty.value = 0;
+      ingredientUnit.value = "unidades";
+      ingredientProducts.value = "";
+      ingredientAvailable.checked = true;
+      saveIngredientBtn.textContent = "Añadir ingrediente";
+      cancelIngredientEditBtn.style.display = "none";
+    }
+
+    function resetDishForm() {
+      editingDishId.value = "";
+      dishName.value = "";
+      dishQty.value = 0;
+      dishUnit.value = "raciones";
+      dishNotes.value = "";
+      currentRecipe = [];
+      saveDishBtn.textContent = "Añadir plato";
+      cancelDishEditBtn.style.display = "none";
+      renderCurrentRecipe();
+    }
+
+    saveIngredientBtn.addEventListener("click", () => {
+      const name = ingredientName.value.trim();
+      const qty = Number(ingredientQty.value);
+      const unit = ingredientUnit.value.trim() || "unidades";
+      const products = parseProducts(ingredientProducts.value);
+      const available = ingredientAvailable.checked;
+      if (!name) return alert("Escribe el nombre del ingrediente.");
+      if (Number.isNaN(qty) || qty < 0) return alert("La cantidad debe ser igual o mayor que 0.");
+      if (editingIngredientId.value) {
+        const ingredient = ingredients.find(item => item.id === editingIngredientId.value);
+        if (ingredient) Object.assign(ingredient, { name, qty, unit, available, products });
+      } else {
+        ingredients.push({ id: createId(), name, qty, unit, available, products });
+      }
+      resetIngredientForm();
+      renderAll();
+    });
+
+    cancelIngredientEditBtn.addEventListener("click", resetIngredientForm);
+
+    document.getElementById("addRecipeIngredientBtn").addEventListener("click", () => {
+      const ingredientId = recipeIngredientSelect.value;
+      const qty = Number(recipeIngredientQty.value);
+      if (!ingredientId) return alert("Añade o selecciona un ingrediente.");
+      if (Number.isNaN(qty) || qty <= 0) return alert("La cantidad por ración debe ser mayor que 0.");
+      const existing = currentRecipe.find(row => row.ingredientId === ingredientId);
+      if (existing) existing.qty = qty;
+      else currentRecipe.push({ ingredientId, qty });
+      recipeIngredientQty.value = 1;
+      renderCurrentRecipe();
+    });
+
+    saveDishBtn.addEventListener("click", () => {
+      const name = dishName.value.trim();
+      const qty = Number(dishQty.value);
+      const unit = dishUnit.value.trim() || "raciones";
+      const notes = dishNotes.value.trim();
+      if (!name) return alert("Escribe el nombre del plato.");
+      if (Number.isNaN(qty) || qty < 0) return alert("Las raciones preparadas deben ser iguales o mayores que 0.");
+      if (editingDishId.value) {
+        const dish = dishes.find(item => item.id === editingDishId.value);
+        if (dish) Object.assign(dish, { name, qty, unit, notes, recipe: [...currentRecipe] });
+      } else {
+        dishes.push({ id: createId(), name, qty, unit, notes, recipe: [...currentRecipe] });
+      }
+      resetDishForm();
+      renderAll();
+    });
+
+    cancelDishEditBtn.addEventListener("click", resetDishForm);
+
+    document.getElementById("createWeekBtn").addEventListener("click", () => {
+      const name = newWeekName.value.trim() || `Semana ${weeks.length + 1}`;
+      const week = normalizeWeek({ name, plan: {} });
+      weeks.push(week);
+      activeWeekId = week.id;
+      newWeekName.value = "";
+      renderAll();
+      switchTab("calendar");
+    });
+
+    document.getElementById("duplicateWeekBtn").addEventListener("click", () => {
+      duplicateWeek(activeWeekId, newWeekName.value.trim());
+    });
+
+    document.getElementById("makeTypicalWeekBtn").addEventListener("click", () => {
+      markTypicalWeek(activeWeekId);
+    });
+
+    document.getElementById("applyTypicalWeekBtn").addEventListener("click", () => {
+      if (!typicalWeekPlan) return alert("Aún no has guardado ninguna semana tipo.");
+      const name = applyTypicalName.value.trim() || `Semana desde tipo ${weeks.length + 1}`;
+      const week = normalizeWeek({ name, plan: structuredCloneFallback(typicalWeekPlan) });
+      weeks.push(week);
+      activeWeekId = week.id;
+      applyTypicalName.value = "";
+      renderAll();
+      switchTab("calendar");
+    });
+
+    activeWeekSelect.addEventListener("change", () => {
+      activeWeekId = activeWeekSelect.value;
+      renderAll();
+    });
+
+    document.getElementById("renameWeekBtn").addEventListener("click", () => {
+      const name = renameWeekInput.value.trim();
+      if (!name) return alert("Escribe un nombre para la semana.");
+      getActiveWeek().name = name;
+      renderAll();
+    });
+
+    document.getElementById("addMemberBtn").addEventListener("click", () => {
+      const name = memberName.value.trim();
+      if (!name) return alert("Escribe el nombre del miembro.");
+      if (familyMembers.some(member => member.name.toLowerCase() === name.toLowerCase())) return alert("Ese miembro ya existe.");
+      familyMembers.push({ id: createId(), name });
+      memberName.value = "";
+      renderAll();
+    });
+
+    document.getElementById("addMealBtn").addEventListener("click", () => {
+      const name = mealName.value.trim();
+      if (!name) return alert("Escribe el nombre del tipo de comida.");
+      if (mealTypes.some(meal => meal.name.toLowerCase() === name.toLowerCase())) return alert("Ese tipo de comida ya existe.");
+      mealTypes.push({ id: createId(), name });
+      mealName.value = "";
+      renderAll();
+    });
+
+    window.selectWeek = function(id) {
+      activeWeekId = id;
+      renderAll();
+      switchTab("calendar");
+    };
+
+    window.duplicateWeek = function(id, customName = "") {
+      const source = weeks.find(week => week.id === id);
+      if (!source) return;
+      const name = customName || `${source.name} copia`;
+      const week = normalizeWeek({
+        name,
+        plan: structuredCloneFallback(source.plan),
+        isTypical: false
+      });
+      weeks.push(week);
+      activeWeekId = week.id;
+      newWeekName.value = "";
+      renderAll();
+      switchTab("calendar");
+    };
+
+    window.markTypicalWeek = function(id) {
+      const week = weeks.find(item => item.id === id);
+      if (!week) return;
+      weeks.forEach(item => item.isTypical = false);
+      week.isTypical = true;
+      typicalWeekPlan = structuredCloneFallback(week.plan);
+      alert(`"${week.name}" se ha guardado como semana tipo.`);
+      renderAll();
+    };
+
+    window.deleteWeek = function(id) {
+      if (weeks.length === 1) return alert("Debe quedar al menos una semana.");
+      const week = weeks.find(item => item.id === id);
+      if (!week || !confirm(`¿Eliminar "${week.name}"?`)) return;
+      weeks = weeks.filter(item => item.id !== id);
+      if (activeWeekId === id) activeWeekId = weeks[0].id;
+      renderAll();
+    };
+
+    window.removeRecipeIngredient = function(index) {
+      currentRecipe.splice(index, 1);
+      renderCurrentRecipe();
+    };
+
+    window.editIngredient = function(id) {
+      const ingredient = ingredients.find(item => item.id === id);
+      if (!ingredient) return;
+      editingIngredientId.value = ingredient.id;
+      ingredientName.value = ingredient.name;
+      ingredientQty.value = ingredient.qty;
+      ingredientUnit.value = ingredient.unit;
+      ingredientProducts.value = stringifyProducts(ingredient.products || []);
+      ingredientAvailable.checked = ingredient.available;
+      saveIngredientBtn.textContent = "Guardar ingrediente";
+      cancelIngredientEditBtn.style.display = "inline-block";
+      switchTab("ingredients");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    window.deleteIngredient = function(id) {
+      const ingredient = ingredients.find(item => item.id === id);
+      if (!ingredient) return;
+      const usedInDish = dishes.some(dish => dish.recipe.some(row => row.ingredientId === id));
+      const message = usedInDish ? `"${ingredient.name}" está usado en algún plato. Si lo eliminas, se quitará de esas recetas. ¿Continuar?` : `¿Eliminar "${ingredient.name}"?`;
+      if (!confirm(message)) return;
+      ingredients = ingredients.filter(item => item.id !== id);
+      dishes.forEach(dish => dish.recipe = dish.recipe.filter(row => row.ingredientId !== id));
+      renderAll();
+    };
+
+    window.editDish = function(id) {
+      const dish = dishes.find(item => item.id === id);
+      if (!dish) return;
+      editingDishId.value = dish.id;
+      dishName.value = dish.name;
+      dishQty.value = dish.qty;
+      dishUnit.value = dish.unit;
+      dishNotes.value = dish.notes || "";
+      currentRecipe = dish.recipe.map(row => ({ ...row }));
+      saveDishBtn.textContent = "Guardar plato";
+      cancelDishEditBtn.style.display = "inline-block";
+      renderCurrentRecipe();
+      switchTab("dishes");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    window.deleteDish = function(id) {
+      const dish = dishes.find(item => item.id === id);
+      if (!dish || !confirm(`¿Eliminar "${dish.name}" del listado y de todas las semanas?`)) return;
+      dishes = dishes.filter(item => item.id !== id);
+      favoriteIds = favoriteIds.filter(favId => favId !== id);
+      weeks.forEach(week => {
+        Object.keys(week.plan).forEach(slot => { if (week.plan[slot] === id) delete week.plan[slot]; });
+      });
+      renderAll();
+    };
+
+    window.toggleFavorite = function(id) {
+      if (favoriteIds.includes(id)) favoriteIds = favoriteIds.filter(favId => favId !== id);
+      else favoriteIds.push(id);
+      renderAll();
+    };
+
+    window.deleteMember = function(id) {
+      const member = familyMembers.find(item => item.id === id);
+      if (!member) return;
+      if (familyMembers.length === 1) return alert("Debe quedar al menos un miembro para poder usar el calendario.");
+      if (!confirm(`¿Eliminar a "${member.name}" y sus comidas planificadas en todas las semanas?`)) return;
+      familyMembers = familyMembers.filter(item => item.id !== id);
+      renderAll();
+    };
+
+    window.deleteMeal = function(id) {
+      const meal = mealTypes.find(item => item.id === id);
+      if (!meal) return;
+      if (mealTypes.length === 1) return alert("Debe quedar al menos un tipo de comida para poder usar el calendario.");
+      if (!confirm(`¿Eliminar "${meal.name}" y sus comidas planificadas en todas las semanas?`)) return;
+      mealTypes = mealTypes.filter(item => item.id !== id);
+      renderAll();
+    };
+
+    document.getElementById("clearPlanBtn").addEventListener("click", () => {
+      if (!confirm("¿Vaciar la planificación de esta semana?")) return;
+      setPlan({});
+      renderAll();
+    });
+
+    function renderBarcodeList() {
+      barcodeList.innerHTML = "";
+      const rows = [];
+      ingredients.forEach(ingredient => {
+        (ingredient.products || []).forEach(product => rows.push({ ingredient, product }));
+      });
+      if (!rows.length) {
+        barcodeList.innerHTML = '<div class="empty">Todavía no hay códigos guardados. Puedes añadirlos desde esta pestaña o desde la ficha de cada ingrediente.</div>';
+        return;
+      }
+      rows.forEach(({ ingredient, product }) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `<div class="item-top"><div><div class="item-name">${escapeHtml(ingredient.name)}</div><div class="muted">${escapeHtml(product.brand || "Producto")} ${product.barcode ? "· " + escapeHtml(product.barcode) : ""}</div><div class="muted">${formatNumber(product.packageQty)} ${escapeHtml(product.packageUnit)} · ${formatCurrency(product.price)}</div></div><span class="badge favorite">Código</span></div><div class="mini-actions"><button class="ghost" onclick="loadProductIntoScanner('${ingredient.id}', '${escapeForAttr(product.barcode)}')">Usar</button><button class="danger" onclick="deleteProductBarcode('${ingredient.id}', '${escapeForAttr(product.barcode)}', '${escapeForAttr(product.brand)}')">Eliminar</button></div>`;
+        barcodeList.appendChild(div);
+      });
+    }
+
+    function fillScannerFromProduct(ingredient, product) {
+      quickIngredientSelect.value = ingredient.id;
+      scanBarcodeInput.value = product.barcode || scanBarcodeInput.value;
+      quickBrand.value = product.brand || "";
+      quickPackageQty.value = product.packageQty || 1;
+      quickPackageUnit.value = product.packageUnit || ingredient.unit;
+      quickPrice.value = product.price || "";
+      scannerStatus.textContent = `Detectado: ${ingredient.name}${product.brand ? " · " + product.brand : ""}`;
+    }
+
+    function handleBarcodeLookup() {
+      const barcode = scanBarcodeInput.value.trim();
+      if (!barcode) return alert("Escribe o escanea un código.");
+      const found = findBarcode(barcode);
+      if (found) fillScannerFromProduct(found.ingredient, found.product);
+      else scannerStatus.textContent = "Código no guardado. Selecciona un ingrediente y pulsa ‘Guardar código en ingrediente’.";
+    }
+
+    function saveProductFromScanner() {
+      const ingredient = ingredients.find(item => item.id === quickIngredientSelect.value);
+      if (!ingredient) return alert("Selecciona un ingrediente.");
+      const product = normalizeProduct({
+        barcode: scanBarcodeInput.value.trim(),
+        brand: quickBrand.value.trim(),
+        packageQty: Number(quickPackageQty.value),
+        packageUnit: quickPackageUnit.value.trim() || ingredient.unit,
+        price: Number(quickPrice.value)
+      });
+      if (!product.barcode && !product.brand) return alert("Añade al menos un código o una marca/variante.");
+      if (product.packageQty <= 0) return alert("La cantidad por envase debe ser mayor que 0.");
+      const index = (ingredient.products || []).findIndex(item => product.barcode && item.barcode === product.barcode);
+      if (!ingredient.products) ingredient.products = [];
+      if (index >= 0) ingredient.products[index] = product;
+      else ingredient.products.push(product);
+      ingredient.unit = ingredient.unit || product.packageUnit;
+      saveData();
+      renderAll();
+      scannerStatus.textContent = "Código/producto guardado.";
+    }
+
+    function quickUpdateStock() {
+      const ingredient = ingredients.find(item => item.id === quickIngredientSelect.value);
+      if (!ingredient) return alert("Selecciona un ingrediente.");
+      const packages = Number(quickPackages.value) || 1;
+      const packageQty = Number(quickPackageQty.value);
+      const packageUnit = quickPackageUnit.value.trim() || ingredient.unit;
+      if (packageQty <= 0) return alert("La cantidad por envase debe ser mayor que 0.");
+      if (!sameUnit(packageUnit, ingredient.unit)) {
+        if (!confirm(`La unidad del producto (${packageUnit}) no coincide con la del ingrediente (${ingredient.unit}). ¿Quieres cambiar la unidad del ingrediente a ${packageUnit}?`)) return;
+        ingredient.unit = packageUnit;
+      }
+      ingredient.qty = (Number(ingredient.qty) || 0) + packages * packageQty;
+      ingredient.available = true;
+      if (scanBarcodeInput.value.trim() || quickBrand.value.trim()) saveProductFromScanner();
+      else {
+        saveData();
+        renderAll();
+      }
+      scannerStatus.textContent = `Stock actualizado: ${ingredient.name} +${formatNumber(packages * packageQty)} ${ingredient.unit}`;
+    }
+
+    window.loadProductIntoScanner = function(ingredientId, barcode) {
+      const ingredient = ingredients.find(item => item.id === ingredientId);
+      if (!ingredient) return;
+      const product = (ingredient.products || []).find(item => item.barcode === barcode) || (ingredient.products || [])[0];
+      if (product) fillScannerFromProduct(ingredient, product);
+      switchTab("scanner");
+    };
+
+    window.deleteProductBarcode = function(ingredientId, barcode, brand) {
+      const ingredient = ingredients.find(item => item.id === ingredientId);
+      if (!ingredient) return;
+      if (!confirm("¿Eliminar este código/producto guardado?")) return;
+      ingredient.products = (ingredient.products || []).filter(item => !(item.barcode === barcode && item.brand === brand));
+      renderAll();
+    };
+
+    quickIngredientSelect.addEventListener("change", () => {
+      const ingredient = ingredients.find(item => item.id === quickIngredientSelect.value);
+      if (!ingredient) return;
+      quickPackageUnit.value = ingredient.unit;
+      const product = bestProductForIngredient(ingredient) || (ingredient.products || [])[0];
+      if (product) fillScannerFromProduct(ingredient, product);
+    });
+
+    document.getElementById("findBarcodeBtn").addEventListener("click", handleBarcodeLookup);
+    document.getElementById("saveBarcodeBtn").addEventListener("click", saveProductFromScanner);
+    document.getElementById("quickUpdateStockBtn").addEventListener("click", quickUpdateStock);
+
+    document.getElementById("startScannerBtn").addEventListener("click", async () => {
+      if (!('BarcodeDetector' in window)) {
+        scannerStatus.textContent = "Tu navegador no soporta lectura de códigos con cámara. Usa la entrada manual.";
+        return;
+      }
+      try {
+        scannerStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+        scannerVideo.srcObject = scannerStream;
+        scannerVideo.style.display = "block";
+        await scannerVideo.play();
+        const detector = new BarcodeDetector({ formats: ["ean_13", "ean_8", "upc_a", "upc_e", "code_128"] });
+        scannerStatus.textContent = "Escaneando... apunta al código de barras.";
+        scannerTimer = setInterval(async () => {
+          try {
+            const codes = await detector.detect(scannerVideo);
+            if (codes.length) {
+              scanBarcodeInput.value = codes[0].rawValue;
+              handleBarcodeLookup();
+              stopScanner();
+            }
+          } catch {}
+        }, 700);
+      } catch {
+        scannerStatus.textContent = "No se pudo acceder a la cámara. Usa la entrada manual o abre la página desde HTTPS/localhost.";
+      }
+    });
+
+    document.getElementById("stopScannerBtn").addEventListener("click", stopScanner);
+
+    function stopScanner() {
+      if (scannerTimer) clearInterval(scannerTimer);
+      scannerTimer = null;
+      if (scannerStream) scannerStream.getTracks().forEach(track => track.stop());
+      scannerStream = null;
+      scannerVideo.style.display = "none";
+    }
+
+
+    document.getElementById("printCalendarBtn").addEventListener("click", () => printMode("print-calendar"));
+    document.getElementById("printShoppingBtn").addEventListener("click", () => printMode("print-shopping"));
+
+    function printMode(mode) {
+      document.body.classList.remove("print-calendar", "print-shopping");
+      document.body.classList.add(mode);
+      window.print();
+      setTimeout(() => document.body.classList.remove(mode), 500);
+    }
+
+    document.getElementById("copyShoppingBtn").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(shoppingText());
+        alert("Lista copiada. Puedes pegarla en Tasks, WhatsApp, Notas o donde quieras.");
+      } catch {
+        alert("No se pudo copiar automáticamente. Puedes usar el botón de exportar a PDF.");
+      }
+    });
+
+    document.getElementById("shareShoppingBtn").addEventListener("click", async () => {
+      const text = shoppingText();
+      if (navigator.share) {
+        try { await navigator.share({ title: "Lista de la compra", text }); } catch {}
+      } else {
+        try {
+          await navigator.clipboard.writeText(text);
+          alert("Tu navegador no permite compartir directamente. He copiado la lista para pegarla en Tasks.");
+        } catch {
+          alert("Tu navegador no permite compartir directamente. Puedes exportar la lista a PDF.");
+        }
+      }
+    });
+
+    function structuredCloneFallback(value) {
+      if (typeof structuredClone === "function") return structuredClone(value);
+      return JSON.parse(JSON.stringify(value));
+    }
+
+    function formatNumber(value) {
+      const number = Number(value) || 0;
+      return Number.isInteger(number) ? String(number) : number.toFixed(2).replace(".", ",").replace(/,?0+$/, "");
+    }
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(Number(value) || 0);
+    }
+
+    function escapeForAttr(text) {
+      return String(text || "").replaceAll("\\", "\\\\").replaceAll("'", "\\'");
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>
