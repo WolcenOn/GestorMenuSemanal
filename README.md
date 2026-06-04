@@ -1,2 +1,0 @@
-# GestorMenuSemanal
-Gestor de menus
