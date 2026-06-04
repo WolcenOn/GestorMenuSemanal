@@ -1,0 +1,10 @@
+{
+  "categoria": "Apps",
+  "icono": "📱",
+  "etiquetas": ["comidas", "planificador", "menú", "organización", "recetas"],
+  "descripcion": "Aplicación para planificar comidas, organizar menús y facilitar la preparación semanal.",
+  "demo": "",
+  "destacado": true,
+  "orden": 16,
+  "ocultar": false
+}

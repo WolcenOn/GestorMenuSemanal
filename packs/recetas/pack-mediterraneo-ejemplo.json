@@ -1,0 +1,132 @@
+{
+  "app": "gestor-comidas",
+  "type": "dishes-with-ingredients",
+  "name": "Pack mediterráneo de ejemplo",
+  "description": "Ejemplo compatible para probar la importación remota desde GitHub Pages.",
+  "dishes": [
+    {
+      "name": "Ensalada de garbanzos mediterránea",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Pack mediterráneo de ejemplo",
+      "category": "Legumbres",
+      "tags": [
+        "mediterránea",
+        "fría",
+        "económica"
+      ],
+      "prepTime": "15 min",
+      "difficulty": "Fácil",
+      "approxPrice": 2.1,
+      "notes": "Ideal para dejar preparada en la nevera.",
+      "ingredients": [
+        {
+          "name": "Garbanzos cocidos",
+          "qty": 120,
+          "unit": "g",
+          "family": "Legumbres"
+        },
+        {
+          "name": "Tomate",
+          "qty": 100,
+          "unit": "g",
+          "family": "Verdura"
+        },
+        {
+          "name": "Pepino",
+          "qty": 60,
+          "unit": "g",
+          "family": "Verdura"
+        },
+        {
+          "name": "Aceite de oliva",
+          "qty": 10,
+          "unit": "ml",
+          "family": "Despensa"
+        }
+      ]
+    },
+    {
+      "name": "Merluza con patata y judías verdes",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Pack mediterráneo de ejemplo",
+      "category": "Pescado y mar",
+      "tags": [
+        "mediterránea",
+        "ligera"
+      ],
+      "prepTime": "30 min",
+      "difficulty": "Fácil",
+      "approxPrice": 3.4,
+      "notes": "Se puede cocinar al vapor o al horno.",
+      "ingredients": [
+        {
+          "name": "Merluza",
+          "qty": 150,
+          "unit": "g",
+          "family": "Carne y pescado"
+        },
+        {
+          "name": "Patata",
+          "qty": 180,
+          "unit": "g",
+          "family": "Verdura"
+        },
+        {
+          "name": "Judías verdes",
+          "qty": 120,
+          "unit": "g",
+          "family": "Verdura"
+        },
+        {
+          "name": "Aceite de oliva",
+          "qty": 10,
+          "unit": "ml",
+          "family": "Despensa"
+        }
+      ]
+    },
+    {
+      "name": "Tortilla de calabacín",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Pack mediterráneo de ejemplo",
+      "category": "Cenas ligeras",
+      "tags": [
+        "cena ligera",
+        "vegetariano"
+      ],
+      "prepTime": "25 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.8,
+      "notes": "Añade cebolla si te gusta más jugosa.",
+      "ingredients": [
+        {
+          "name": "Huevo",
+          "qty": 2,
+          "unit": "unidades",
+          "family": "Huevos"
+        },
+        {
+          "name": "Calabacín",
+          "qty": 180,
+          "unit": "g",
+          "family": "Verdura"
+        },
+        {
+          "name": "Cebolla",
+          "qty": 50,
+          "unit": "g",
+          "family": "Verdura"
+        },
+        {
+          "name": "Aceite de oliva",
+          "qty": 8,
+          "unit": "ml",
+          "family": "Despensa"
+        }
+      ]
+    }
+  ]
+}

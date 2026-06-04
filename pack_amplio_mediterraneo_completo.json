@@ -1,0 +1,1509 @@
+{
+  "app": "gestor-comidas",
+  "type": "dishes-with-ingredients",
+  "name": "Pack amplio mediterráneo completo",
+  "description": "Pack amplio con recetas mediterráneas, categorías, etiquetas, tiempo, dificultad, precio aproximado, preparación e ingredientes con familias. Precios orientativos.",
+  "version": 1,
+  "dishes": [
+    {
+      "name": "Gazpacho andaluz",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Verduras y entrantes",
+      "category": "Entrantes fríos",
+      "tags": [
+        "mediterránea",
+        "vegano",
+        "verano",
+        "verduras",
+        "sin lactosa"
+      ],
+      "prepTime": "15 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.2,
+      "notes": "Sopa fría de verduras, ideal para verano.\n\nCómo se hace:\n1. Lava y trocea tomate, pepino, pimiento y ajo.\n2. Tritura con aceite, vinagre y sal.\n3. Añade agua fría hasta conseguir la textura deseada.\n4. Enfría antes de servir.",
+      "ingredients": [
+        {
+          "name": "Tomate",
+          "qty": 300,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.75
+        },
+        {
+          "name": "Pepino",
+          "qty": 60,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.2
+        },
+        {
+          "name": "Pimiento verde",
+          "qty": 40,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.18
+        },
+        {
+          "name": "Ajo",
+          "qty": 2,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.02
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 12,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.1
+        },
+        {
+          "name": "Vinagre",
+          "qty": 5,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.02
+        },
+        {
+          "name": "Sal",
+          "qty": 1,
+          "unit": "g",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.01
+        }
+      ]
+    },
+    {
+      "name": "Salmorejo con huevo y jamón",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Huelva y Andalucía",
+      "category": "Entrantes fríos",
+      "tags": [
+        "mediterránea",
+        "Andalucía",
+        "verano",
+        "Huelva"
+      ],
+      "prepTime": "25 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.8,
+      "notes": "Salmorejo tradicional servido con huevo cocido y jamón en tacos.\n\nCómo se hace:\n1. Tritura tomate, pan, ajo, aceite y sal hasta obtener una crema espesa.\n2. Cuece el huevo, enfría y pica.\n3. Sirve el salmorejo frío.\n4. Añade huevo cocido y jamón en tacos por encima.",
+      "ingredients": [
+        {
+          "name": "Tomate",
+          "qty": 300,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.75
+        },
+        {
+          "name": "Pan del día",
+          "qty": 40,
+          "unit": "g",
+          "family": "Cereales y pan",
+          "available": true,
+          "approxPrice": 0.12
+        },
+        {
+          "name": "Ajo",
+          "qty": 2,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.02
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 15,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.12
+        },
+        {
+          "name": "Huevo",
+          "qty": 1,
+          "unit": "unidades",
+          "family": "Huevos y lácteos",
+          "available": true,
+          "approxPrice": 0.25
+        },
+        {
+          "name": "Jamón en tacos",
+          "qty": 35,
+          "unit": "g",
+          "family": "Carne y pescado",
+          "available": true,
+          "approxPrice": 0.55
+        },
+        {
+          "name": "Sal",
+          "qty": 1,
+          "unit": "g",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.01
+        }
+      ]
+    },
+    {
+      "name": "Ensalada mediterránea completa",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Básicos diarios",
+      "category": "Ensaladas",
+      "tags": [
+        "mediterránea",
+        "rápida",
+        "verduras",
+        "cena ligera"
+      ],
+      "prepTime": "12 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.6,
+      "notes": "Ensalada fresca con verduras, huevo y aceitunas.\n\nCómo se hace:\n1. Lava y corta lechuga, tomate, pepino y cebolla.\n2. Cuece el huevo si no lo tienes ya preparado.\n3. Mezcla todo con aceitunas.\n4. Aliña con aceite, vinagre y sal.",
+      "ingredients": [
+        {
+          "name": "Lechuga",
+          "qty": 80,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.3
+        },
+        {
+          "name": "Tomate",
+          "qty": 120,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.3
+        },
+        {
+          "name": "Pepino",
+          "qty": 70,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.22
+        },
+        {
+          "name": "Cebolla",
+          "qty": 30,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.08
+        },
+        {
+          "name": "Huevo",
+          "qty": 1,
+          "unit": "unidades",
+          "family": "Huevos y lácteos",
+          "available": true,
+          "approxPrice": 0.25
+        },
+        {
+          "name": "Aceitunas",
+          "qty": 25,
+          "unit": "g",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.2
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 10,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.08
+        },
+        {
+          "name": "Vinagre",
+          "qty": 5,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.02
+        }
+      ]
+    },
+    {
+      "name": "Pisto de verduras con huevo",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Verduras y cenas",
+      "category": "Verduras",
+      "tags": [
+        "mediterránea",
+        "vegetariano",
+        "cena ligera",
+        "verduras"
+      ],
+      "prepTime": "40 min",
+      "difficulty": "Media",
+      "approxPrice": 1.9,
+      "notes": "Pisto de verduras con huevo, útil como plato principal o guarnición.\n\nCómo se hace:\n1. Pica cebolla, pimientos, calabacín, berenjena y tomate.\n2. Sofríe la cebolla y los pimientos.\n3. Añade calabacín y berenjena y cocina hasta que estén tiernos.\n4. Incorpora el tomate y reduce.\n5. Sirve con huevo a la plancha o escalfado.",
+      "ingredients": [
+        {
+          "name": "Tomate",
+          "qty": 180,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.45
+        },
+        {
+          "name": "Calabacín",
+          "qty": 120,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.35
+        },
+        {
+          "name": "Berenjena",
+          "qty": 100,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.35
+        },
+        {
+          "name": "Pimiento rojo",
+          "qty": 70,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.35
+        },
+        {
+          "name": "Cebolla",
+          "qty": 60,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.15
+        },
+        {
+          "name": "Huevo",
+          "qty": 1,
+          "unit": "unidades",
+          "family": "Huevos y lácteos",
+          "available": true,
+          "approxPrice": 0.25
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 12,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Lentejas con verduras",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Legumbres",
+      "category": "Legumbres",
+      "tags": [
+        "mediterránea",
+        "legumbres",
+        "diabetes",
+        "alto en fibra"
+      ],
+      "prepTime": "35 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.5,
+      "notes": "Guiso de lentejas con verduras. Puede hacerse con lentejas ya cocidas para ahorrar tiempo.\n\nCómo se hace:\n1. Sofríe cebolla, ajo, pimiento y zanahoria con aceite.\n2. Añade pimentón y laurel.\n3. Incorpora las lentejas cocidas y un poco de agua o caldo.\n4. Cocina 10-15 minutos para que se integren los sabores.",
+      "ingredients": [
+        {
+          "name": "Lentejas cocidas",
+          "qty": 180,
+          "unit": "g",
+          "family": "Legumbres",
+          "available": true,
+          "approxPrice": 0.45
+        },
+        {
+          "name": "Zanahoria",
+          "qty": 70,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.12
+        },
+        {
+          "name": "Pimiento verde",
+          "qty": 50,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.2
+        },
+        {
+          "name": "Cebolla",
+          "qty": 50,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.12
+        },
+        {
+          "name": "Ajo",
+          "qty": 4,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.03
+        },
+        {
+          "name": "Pimentón dulce",
+          "qty": 2,
+          "unit": "g",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.03
+        },
+        {
+          "name": "Laurel",
+          "qty": 1,
+          "unit": "hojas",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.02
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 10,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.08
+        }
+      ]
+    },
+    {
+      "name": "Garbanzos con espinacas",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Legumbres",
+      "category": "Legumbres",
+      "tags": [
+        "mediterránea",
+        "vegano",
+        "legumbres",
+        "Andalucía",
+        "alto en fibra"
+      ],
+      "prepTime": "25 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.45,
+      "notes": "Plato andaluz de legumbre y verdura.\n\nCómo se hace:\n1. Sofríe ajo picado con aceite.\n2. Añade pimentón y comino sin que se quemen.\n3. Incorpora las espinacas y cocina hasta que bajen.\n4. Añade garbanzos cocidos y cocina unos minutos.",
+      "ingredients": [
+        {
+          "name": "Garbanzos cocidos",
+          "qty": 180,
+          "unit": "g",
+          "family": "Legumbres",
+          "available": true,
+          "approxPrice": 0.45
+        },
+        {
+          "name": "Espinacas",
+          "qty": 200,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.7
+        },
+        {
+          "name": "Ajo",
+          "qty": 5,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.03
+        },
+        {
+          "name": "Pimentón dulce",
+          "qty": 2,
+          "unit": "g",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.03
+        },
+        {
+          "name": "Comino",
+          "qty": 1,
+          "unit": "g",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.02
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 12,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Ensalada de alubias",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Legumbres",
+      "category": "Ensaladas",
+      "tags": [
+        "mediterránea",
+        "vegano",
+        "legumbres",
+        "meal prep",
+        "verano"
+      ],
+      "prepTime": "15 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.35,
+      "notes": "Ensalada fría de legumbre para preparar con antelación.\n\nCómo se hace:\n1. Enjuaga y escurre las alubias cocidas.\n2. Pica tomate, pimiento y cebolla.\n3. Mezcla con las alubias.\n4. Aliña con aceite, vinagre y sal.",
+      "ingredients": [
+        {
+          "name": "Alubias cocidas",
+          "qty": 180,
+          "unit": "g",
+          "family": "Legumbres",
+          "available": true,
+          "approxPrice": 0.5
+        },
+        {
+          "name": "Tomate",
+          "qty": 120,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.3
+        },
+        {
+          "name": "Pimiento verde",
+          "qty": 50,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.2
+        },
+        {
+          "name": "Cebolla",
+          "qty": 30,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.08
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 10,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.08
+        },
+        {
+          "name": "Vinagre",
+          "qty": 5,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.02
+        }
+      ]
+    },
+    {
+      "name": "Hummus con crudités",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Vegano",
+      "category": "Entrantes",
+      "tags": [
+        "mediterránea",
+        "vegano",
+        "legumbres",
+        "cena ligera"
+      ],
+      "prepTime": "15 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.3,
+      "notes": "Crema de garbanzos con verduras crudas para mojar.\n\nCómo se hace:\n1. Tritura garbanzos, tahini, limón y aceite.\n2. Añade agua poco a poco hasta lograr textura cremosa.\n3. Corta zanahoria y pepino en bastones.\n4. Sirve el hummus con las verduras.",
+      "ingredients": [
+        {
+          "name": "Garbanzos cocidos",
+          "qty": 150,
+          "unit": "g",
+          "family": "Legumbres",
+          "available": true,
+          "approxPrice": 0.38
+        },
+        {
+          "name": "Tahini",
+          "qty": 15,
+          "unit": "g",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.25
+        },
+        {
+          "name": "Limón",
+          "qty": 20,
+          "unit": "ml",
+          "family": "Fruta",
+          "available": true,
+          "approxPrice": 0.08
+        },
+        {
+          "name": "Zanahoria",
+          "qty": 100,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.18
+        },
+        {
+          "name": "Pepino",
+          "qty": 100,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.3
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 8,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.07
+        }
+      ]
+    },
+    {
+      "name": "Acelgas con piñones",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Huelva y Andalucía",
+      "category": "Verduras",
+      "tags": [
+        "mediterránea",
+        "vegano",
+        "Huelva",
+        "verduras"
+      ],
+      "prepTime": "25 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.75,
+      "notes": "Verdura salteada con ajo y piñones.\n\nCómo se hace:\n1. Lava y trocea las acelgas.\n2. Cuece o saltea las acelgas hasta que estén tiernas.\n3. Dora ajo laminado con aceite.\n4. Añade acelgas y piñones y saltea todo junto.",
+      "ingredients": [
+        {
+          "name": "Acelgas",
+          "qty": 250,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.75
+        },
+        {
+          "name": "Ajo",
+          "qty": 5,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.03
+        },
+        {
+          "name": "Piñones",
+          "qty": 15,
+          "unit": "g",
+          "family": "Frutos secos y semillas",
+          "available": true,
+          "approxPrice": 0.6
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 15,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.12
+        },
+        {
+          "name": "Sal",
+          "qty": 1,
+          "unit": "g",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.01
+        }
+      ]
+    },
+    {
+      "name": "Crema de calabacín",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Cenas ligeras",
+      "category": "Cremas",
+      "tags": [
+        "mediterránea",
+        "vegetariano",
+        "cena ligera",
+        "verduras"
+      ],
+      "prepTime": "30 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.1,
+      "notes": "Crema suave de verdura para cena o primer plato.\n\nCómo se hace:\n1. Trocea calabacín, cebolla y patata.\n2. Rehoga la cebolla con aceite.\n3. Añade calabacín y patata, cubre con agua y cuece.\n4. Tritura hasta conseguir una crema fina.",
+      "ingredients": [
+        {
+          "name": "Calabacín",
+          "qty": 250,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.7
+        },
+        {
+          "name": "Cebolla",
+          "qty": 50,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.12
+        },
+        {
+          "name": "Patata",
+          "qty": 80,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.12
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 10,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.08
+        }
+      ]
+    },
+    {
+      "name": "Crema de zanahoria y calabaza",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Cenas ligeras",
+      "category": "Cremas",
+      "tags": [
+        "mediterránea",
+        "vegano",
+        "cena ligera",
+        "verduras"
+      ],
+      "prepTime": "35 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.2,
+      "notes": "Crema vegetal de sabor suave.\n\nCómo se hace:\n1. Pela y trocea zanahoria, calabaza y cebolla.\n2. Rehoga la cebolla con aceite.\n3. Añade zanahoria y calabaza y cubre con agua.\n4. Cuece hasta que esté tierno y tritura.",
+      "ingredients": [
+        {
+          "name": "Zanahoria",
+          "qty": 150,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.25
+        },
+        {
+          "name": "Calabaza",
+          "qty": 180,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.45
+        },
+        {
+          "name": "Cebolla",
+          "qty": 50,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.12
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 10,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.08
+        }
+      ]
+    },
+    {
+      "name": "Verduras asadas mediterráneas",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Verduras y cenas",
+      "category": "Verduras",
+      "tags": [
+        "mediterránea",
+        "vegano",
+        "verduras",
+        "meal prep"
+      ],
+      "prepTime": "45 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.65,
+      "notes": "Bandeja de verduras asadas para plato o guarnición.\n\nCómo se hace:\n1. Corta berenjena, calabacín, pimiento y cebolla.\n2. Coloca todo en bandeja de horno.\n3. Añade aceite de oliva y sal.\n4. Hornea hasta que las verduras estén tiernas y doradas.",
+      "ingredients": [
+        {
+          "name": "Berenjena",
+          "qty": 120,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.4
+        },
+        {
+          "name": "Calabacín",
+          "qty": 120,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.35
+        },
+        {
+          "name": "Pimiento rojo",
+          "qty": 80,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.4
+        },
+        {
+          "name": "Cebolla",
+          "qty": 60,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.15
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 12,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Judías verdes con patata y huevo",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Cenas ligeras",
+      "category": "Verduras",
+      "tags": [
+        "mediterránea",
+        "vegetariano",
+        "cena ligera",
+        "diabetes"
+      ],
+      "prepTime": "30 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.55,
+      "notes": "Plato sencillo de verdura con patata y huevo.\n\nCómo se hace:\n1. Cuece judías verdes y patata troceada.\n2. Cuece el huevo aparte.\n3. Escurre las verduras.\n4. Sirve con el huevo troceado y aceite de oliva.",
+      "ingredients": [
+        {
+          "name": "Judías verdes",
+          "qty": 220,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.8
+        },
+        {
+          "name": "Patata",
+          "qty": 120,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.18
+        },
+        {
+          "name": "Huevo",
+          "qty": 1,
+          "unit": "unidades",
+          "family": "Huevos y lácteos",
+          "available": true,
+          "approxPrice": 0.25
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 10,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.08
+        }
+      ]
+    },
+    {
+      "name": "Pechuga de pollo con pisto",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Diabetes",
+      "category": "Carne",
+      "tags": [
+        "mediterránea",
+        "diabetes",
+        "proteína",
+        "verduras"
+      ],
+      "prepTime": "35 min",
+      "difficulty": "Fácil",
+      "approxPrice": 2.3,
+      "notes": "Proteína magra acompañada de verduras.\n\nCómo se hace:\n1. Prepara el pisto con tomate, calabacín, pimiento y cebolla.\n2. Cocina la pechuga a la plancha con poco aceite.\n3. Sirve la pechuga junto al pisto.\n4. Añade un hilo de aceite al final si lo deseas.",
+      "ingredients": [
+        {
+          "name": "Pechuga de pollo",
+          "qty": 160,
+          "unit": "g",
+          "family": "Carne y pescado",
+          "available": true,
+          "approxPrice": 1.35
+        },
+        {
+          "name": "Tomate",
+          "qty": 150,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.38
+        },
+        {
+          "name": "Calabacín",
+          "qty": 100,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.3
+        },
+        {
+          "name": "Pimiento rojo",
+          "qty": 60,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.3
+        },
+        {
+          "name": "Cebolla",
+          "qty": 40,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.1
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 10,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.08
+        }
+      ]
+    },
+    {
+      "name": "Sardinas al horno con ensalada",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Pescado y mar",
+      "category": "Pescado y mar",
+      "tags": [
+        "mediterránea",
+        "pescado",
+        "omega 3",
+        "cena ligera"
+      ],
+      "prepTime": "25 min",
+      "difficulty": "Fácil",
+      "approxPrice": 2.1,
+      "notes": "Pescado azul con guarnición fresca.\n\nCómo se hace:\n1. Coloca las sardinas limpias en una bandeja.\n2. Añade limón, aceite y sal.\n3. Hornea hasta que estén hechas.\n4. Sirve con ensalada de lechuga y tomate.",
+      "ingredients": [
+        {
+          "name": "Sardinas",
+          "qty": 180,
+          "unit": "g",
+          "family": "Carne y pescado",
+          "available": true,
+          "approxPrice": 1.35
+        },
+        {
+          "name": "Lechuga",
+          "qty": 80,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.25
+        },
+        {
+          "name": "Tomate",
+          "qty": 100,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.25
+        },
+        {
+          "name": "Limón",
+          "qty": 20,
+          "unit": "ml",
+          "family": "Fruta",
+          "available": true,
+          "approxPrice": 0.08
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 10,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.08
+        }
+      ]
+    },
+    {
+      "name": "Caballa con pisto",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Pescado y mar",
+      "category": "Pescado y mar",
+      "tags": [
+        "mediterránea",
+        "pescado",
+        "Huelva",
+        "verduras"
+      ],
+      "prepTime": "35 min",
+      "difficulty": "Media",
+      "approxPrice": 2.4,
+      "notes": "Pescado azul con verduras mediterráneas.\n\nCómo se hace:\n1. Prepara un pisto con tomate, calabacín, pimiento y cebolla.\n2. Cocina la caballa a la plancha o al horno.\n3. Sirve la caballa sobre el pisto.\n4. Añade aceite de oliva al final.",
+      "ingredients": [
+        {
+          "name": "Caballa",
+          "qty": 170,
+          "unit": "g",
+          "family": "Carne y pescado",
+          "available": true,
+          "approxPrice": 1.4
+        },
+        {
+          "name": "Tomate",
+          "qty": 150,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.38
+        },
+        {
+          "name": "Calabacín",
+          "qty": 100,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.3
+        },
+        {
+          "name": "Pimiento rojo",
+          "qty": 60,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.3
+        },
+        {
+          "name": "Cebolla",
+          "qty": 50,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.12
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 12,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Patatas con choco",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Huelva y Andalucía",
+      "category": "Pescado y mar",
+      "tags": [
+        "mediterránea",
+        "Huelva",
+        "marinero",
+        "guiso"
+      ],
+      "prepTime": "55 min",
+      "difficulty": "Media",
+      "approxPrice": 2.8,
+      "notes": "Guiso marinero típico de Huelva.\n\nCómo se hace:\n1. Sofríe cebolla, pimiento, ajo y tomate.\n2. Añade el choco troceado y rehoga.\n3. Incorpora patata chascada y laurel.\n4. Cubre con agua y cocina hasta que la patata y el choco estén tiernos.",
+      "ingredients": [
+        {
+          "name": "Choco",
+          "qty": 180,
+          "unit": "g",
+          "family": "Carne y pescado",
+          "available": true,
+          "approxPrice": 1.6
+        },
+        {
+          "name": "Patata",
+          "qty": 220,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.33
+        },
+        {
+          "name": "Cebolla",
+          "qty": 60,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.15
+        },
+        {
+          "name": "Pimiento verde",
+          "qty": 40,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.16
+        },
+        {
+          "name": "Tomate",
+          "qty": 80,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.2
+        },
+        {
+          "name": "Ajo",
+          "qty": 5,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.03
+        },
+        {
+          "name": "Laurel",
+          "qty": 1,
+          "unit": "hojas",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.02
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 15,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.12
+        }
+      ]
+    },
+    {
+      "name": "Habas con choco",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Huelva y Andalucía",
+      "category": "Pescado y mar",
+      "tags": [
+        "mediterránea",
+        "Huelva",
+        "marinero",
+        "verduras"
+      ],
+      "prepTime": "45 min",
+      "difficulty": "Media",
+      "approxPrice": 2.75,
+      "notes": "Plato de habas y choco de inspiración onubense.\n\nCómo se hace:\n1. Sofríe cebolla y ajo con aceite.\n2. Añade el choco troceado y cocina unos minutos.\n3. Incorpora las habas y el pimentón.\n4. Cubre con un poco de agua y cocina hasta que todo esté tierno.",
+      "ingredients": [
+        {
+          "name": "Habas",
+          "qty": 200,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.85
+        },
+        {
+          "name": "Choco",
+          "qty": 160,
+          "unit": "g",
+          "family": "Carne y pescado",
+          "available": true,
+          "approxPrice": 1.42
+        },
+        {
+          "name": "Cebolla",
+          "qty": 60,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.15
+        },
+        {
+          "name": "Ajo",
+          "qty": 5,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.03
+        },
+        {
+          "name": "Pimentón dulce",
+          "qty": 2,
+          "unit": "g",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.03
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 15,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.12
+        }
+      ]
+    },
+    {
+      "name": "Merluza con verduras al vapor",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Pescado y mar",
+      "category": "Pescado y mar",
+      "tags": [
+        "mediterránea",
+        "pescado",
+        "diabetes",
+        "cena ligera"
+      ],
+      "prepTime": "30 min",
+      "difficulty": "Fácil",
+      "approxPrice": 2.65,
+      "notes": "Plato ligero de pescado blanco con verduras.\n\nCómo se hace:\n1. Cuece al vapor patata, zanahoria y judías verdes.\n2. Cocina la merluza al vapor, al horno o a la plancha.\n3. Sirve todo junto.\n4. Añade aceite de oliva antes de servir.",
+      "ingredients": [
+        {
+          "name": "Merluza",
+          "qty": 180,
+          "unit": "g",
+          "family": "Carne y pescado",
+          "available": true,
+          "approxPrice": 1.8
+        },
+        {
+          "name": "Judías verdes",
+          "qty": 120,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.45
+        },
+        {
+          "name": "Zanahoria",
+          "qty": 80,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.14
+        },
+        {
+          "name": "Patata",
+          "qty": 120,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.18
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 10,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.08
+        }
+      ]
+    },
+    {
+      "name": "Tostada integral con tomate y aceite",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Desayunos",
+      "category": "Desayunos",
+      "tags": [
+        "mediterránea",
+        "desayuno",
+        "rápida",
+        "vegetariano"
+      ],
+      "prepTime": "8 min",
+      "difficulty": "Fácil",
+      "approxPrice": 0.75,
+      "notes": "Desayuno mediterráneo sencillo.\n\nCómo se hace:\n1. Tuesta el pan integral.\n2. Ralla o tritura el tomate.\n3. Extiende el tomate sobre el pan.\n4. Añade aceite de oliva por encima.",
+      "ingredients": [
+        {
+          "name": "Pan integral",
+          "qty": 60,
+          "unit": "g",
+          "family": "Cereales y pan",
+          "available": true,
+          "approxPrice": 0.25
+        },
+        {
+          "name": "Tomate",
+          "qty": 100,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.25
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 8,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.07
+        }
+      ]
+    },
+    {
+      "name": "Yogur natural con manzana y almendras",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Desayunos y meriendas",
+      "category": "Desayunos",
+      "tags": [
+        "mediterránea",
+        "diabetes",
+        "merienda",
+        "vegetariano"
+      ],
+      "prepTime": "5 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.2,
+      "notes": "Desayuno o merienda sencilla con fruta entera y frutos secos.\n\nCómo se hace:\n1. Lava y trocea la manzana.\n2. Sirve el yogur natural en un bol.\n3. Añade la manzana troceada.\n4. Incorpora almendras por encima.",
+      "ingredients": [
+        {
+          "name": "Yogur natural",
+          "qty": 1,
+          "unit": "unidades",
+          "family": "Huevos y lácteos",
+          "available": true,
+          "approxPrice": 0.45
+        },
+        {
+          "name": "Manzana",
+          "qty": 1,
+          "unit": "unidades",
+          "family": "Fruta",
+          "available": true,
+          "approxPrice": 0.35
+        },
+        {
+          "name": "Almendras",
+          "qty": 15,
+          "unit": "g",
+          "family": "Frutos secos y semillas",
+          "available": true,
+          "approxPrice": 0.35
+        }
+      ]
+    },
+    {
+      "name": "Fruta de temporada",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Postres y meriendas",
+      "category": "Postres",
+      "tags": [
+        "mediterránea",
+        "vegano",
+        "diabetes",
+        "postre",
+        "fruta"
+      ],
+      "prepTime": "2 min",
+      "difficulty": "Fácil",
+      "approxPrice": 0.45,
+      "notes": "Postre sencillo basado en fruta entera.\n\nCómo se hace:\n1. Lava o pela la fruta elegida.\n2. Sirve una pieza o ración.\n3. Evita añadir azúcar.\n4. Combina con yogur natural si lo quieres más completo.",
+      "ingredients": [
+        {
+          "name": "Manzana",
+          "qty": 1,
+          "unit": "unidades",
+          "family": "Fruta",
+          "available": true,
+          "approxPrice": 0.35
+        }
+      ]
+    },
+    {
+      "name": "Arroz integral con verduras",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Básicos diarios",
+      "category": "Cereales integrales",
+      "tags": [
+        "mediterránea",
+        "vegano",
+        "diabetes",
+        "verduras"
+      ],
+      "prepTime": "40 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.35,
+      "notes": "Cereal integral acompañado de verduras.\n\nCómo se hace:\n1. Cuece el arroz integral siguiendo el paquete.\n2. Pica y saltea las verduras.\n3. Mezcla arroz y verduras.\n4. Ajusta de sal y sirve.",
+      "ingredients": [
+        {
+          "name": "Arroz integral",
+          "qty": 70,
+          "unit": "g",
+          "family": "Cereales y pan",
+          "available": true,
+          "approxPrice": 0.25
+        },
+        {
+          "name": "Calabacín",
+          "qty": 100,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.3
+        },
+        {
+          "name": "Pimiento rojo",
+          "qty": 60,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.3
+        },
+        {
+          "name": "Cebolla",
+          "qty": 50,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.12
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 10,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.08
+        }
+      ]
+    },
+    {
+      "name": "Pasta integral con tomate casero",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Mediterránea · Básicos diarios",
+      "category": "Cereales integrales",
+      "tags": [
+        "mediterránea",
+        "vegetariano",
+        "pasta",
+        "rápida"
+      ],
+      "prepTime": "30 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.25,
+      "notes": "Pasta integral con salsa de tomate casera.\n\nCómo se hace:\n1. Cuece la pasta integral al dente.\n2. Sofríe cebolla y ajo.\n3. Añade tomate y cocina hasta reducir.\n4. Mezcla pasta y salsa.",
+      "ingredients": [
+        {
+          "name": "Pasta integral",
+          "qty": 75,
+          "unit": "g",
+          "family": "Cereales y pan",
+          "available": true,
+          "approxPrice": 0.3
+        },
+        {
+          "name": "Tomate",
+          "qty": 200,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.5
+        },
+        {
+          "name": "Cebolla",
+          "qty": 40,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.1
+        },
+        {
+          "name": "Ajo",
+          "qty": 3,
+          "unit": "g",
+          "family": "Verdura y hortalizas",
+          "available": true,
+          "approxPrice": 0.02
+        },
+        {
+          "name": "Aceite de oliva virgen extra",
+          "qty": 10,
+          "unit": "ml",
+          "family": "Despensa",
+          "available": true,
+          "approxPrice": 0.08
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,681 @@
+{
+  "app": "gestor-comidas",
+  "type": "dishes-with-ingredients",
+  "name": "Vacaloura - Aperitivos veganos",
+  "description": "Pack de aperitivos veganos adaptados y parafraseados a partir del Recetario vegano Vacaloura. Incluye ingredientes y procedimiento resumido en notes.",
+  "source": {
+    "title": "Recetario vegano Vacaloura, castellano",
+    "url": "https://santuariovacaloura.org/wp-content/uploads/2016/11/Recetario-vegano-Vacaloura-castellano.pdf",
+    "note": "Procedimientos resumidos/parafraseados; no es una reproducción literal del PDF."
+  },
+  "dishes": [
+    {
+      "name": "Guacamole",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Vacaloura - Aperitivos veganos",
+      "category": "Aperitivos",
+      "tags": [
+        "vegana",
+        "aperitivo",
+        "sin cocción",
+        "rápida"
+      ],
+      "prepTime": "10 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.8,
+      "notes": "Procedimiento: machaca aguacate maduro con unas gotas de lima para evitar que se oxide. Incorpora tomate y cebolla muy picados, mezcla con cilantro y ajusta de sal. Conservación: guarda tapado en nevera y consúmelo pronto; colocar el hueso del aguacate ayuda a mantenerlo mejor.",
+      "ingredients": [
+        {
+          "name": "Aguacate maduro",
+          "qty": 2,
+          "unit": "unidades",
+          "family": "Fruta",
+          "approxPrice": 1.2
+        },
+        {
+          "name": "Tomate",
+          "qty": 1,
+          "unit": "unidad",
+          "family": "Verdura",
+          "approxPrice": 0.4
+        },
+        {
+          "name": "Cebolla",
+          "qty": 0.5,
+          "unit": "unidad",
+          "family": "Verdura",
+          "approxPrice": 0.15
+        },
+        {
+          "name": "Zumo de lima",
+          "qty": 1,
+          "unit": "cucharadita",
+          "family": "Fruta",
+          "approxPrice": 0.05
+        },
+        {
+          "name": "Cilantro",
+          "qty": 1,
+          "unit": "cucharada",
+          "family": "Especias",
+          "approxPrice": 0.05
+        },
+        {
+          "name": "Sal",
+          "qty": 1,
+          "unit": "pizca",
+          "family": "Despensa",
+          "approxPrice": 0
+        }
+      ]
+    },
+    {
+      "name": "Hummus",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Vacaloura - Aperitivos veganos",
+      "category": "Aperitivos",
+      "tags": [
+        "vegana",
+        "legumbres",
+        "aperitivo",
+        "proteína vegetal"
+      ],
+      "prepTime": "10 min",
+      "difficulty": "Fácil",
+      "approxPrice": 1.5,
+      "notes": "Procedimiento: enjuaga y escurre los garbanzos cocidos. Tritúralos con tahini, ajo, agua, zumo de limón y sal hasta lograr una crema homogénea. Sirve con aceite de oliva y semillas de sésamo; se puede espolvorear pimentón. Conservación: guarda en nevera en recipiente cerrado y consume en pocos días.",
+      "ingredients": [
+        {
+          "name": "Garbanzos cocidos",
+          "qty": 400,
+          "unit": "g",
+          "family": "Legumbre",
+          "approxPrice": 0.8
+        },
+        {
+          "name": "Tahini",
+          "qty": 2,
+          "unit": "cucharadas",
+          "family": "Despensa",
+          "approxPrice": 0.4
+        },
+        {
+          "name": "Ajo",
+          "qty": 2,
+          "unit": "dientes",
+          "family": "Verdura",
+          "approxPrice": 0.05
+        },
+        {
+          "name": "Agua",
+          "qty": 0.5,
+          "unit": "vaso",
+          "family": "Despensa",
+          "approxPrice": 0
+        },
+        {
+          "name": "Zumo de limón",
+          "qty": 0.5,
+          "unit": "unidad",
+          "family": "Fruta",
+          "approxPrice": 0.1
+        },
+        {
+          "name": "Aceite de oliva",
+          "qty": 1,
+          "unit": "cucharada",
+          "family": "Despensa",
+          "approxPrice": 0.1
+        },
+        {
+          "name": "Sésamo tostado",
+          "qty": 1,
+          "unit": "cucharada",
+          "family": "Semillas",
+          "approxPrice": 0.1
+        },
+        {
+          "name": "Sal",
+          "qty": 1,
+          "unit": "pizca",
+          "family": "Despensa",
+          "approxPrice": 0
+        }
+      ]
+    },
+    {
+      "name": "Mermelada de kiwi",
+      "qty": 0,
+      "unit": "tarros",
+      "pack": "Vacaloura - Aperitivos veganos",
+      "category": "Aperitivos",
+      "tags": [
+        "vegana",
+        "dulce",
+        "conserva",
+        "fruta"
+      ],
+      "prepTime": "35 min",
+      "difficulty": "Fácil",
+      "approxPrice": 2.0,
+      "notes": "Procedimiento: pica los kiwis muy pequeños y cuécelos con limón y agua hasta que se vayan deshaciendo. Remueve a menudo; cuando espese, añade endulzante y sigue cocinando hasta textura de mermelada. Puedes triturarla si quieres textura fina. Conservación: guarda en tarro limpio y refrigerado.",
+      "ingredients": [
+        {
+          "name": "Kiwi",
+          "qty": 500,
+          "unit": "g",
+          "family": "Fruta",
+          "approxPrice": 1.5
+        },
+        {
+          "name": "Zumo de limón",
+          "qty": 0.5,
+          "unit": "unidad",
+          "family": "Fruta",
+          "approxPrice": 0.1
+        },
+        {
+          "name": "Azúcar o endulzante",
+          "qty": 3,
+          "unit": "cucharadas",
+          "family": "Despensa",
+          "approxPrice": 0.2
+        },
+        {
+          "name": "Agua",
+          "qty": 1,
+          "unit": "cantidad necesaria",
+          "family": "Despensa",
+          "approxPrice": 0
+        }
+      ]
+    },
+    {
+      "name": "Pesto de brócoli",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Vacaloura - Aperitivos veganos",
+      "category": "Aperitivos",
+      "tags": [
+        "vegana",
+        "salsa",
+        "verdura",
+        "batch cooking"
+      ],
+      "prepTime": "15 min",
+      "difficulty": "Fácil",
+      "approxPrice": 2.5,
+      "notes": "Procedimiento: separa el brócoli en ramilletes, hiérvelo brevemente en agua con sal y enfría. Tritura con ajo, piñones, levadura de cerveza y aceite hasta formar una pasta; añade más aceite si lo quieres más fluido. Conservación: guarda en tarro cerrado en nevera; mejora al reposar unas horas.",
+      "ingredients": [
+        {
+          "name": "Brócoli",
+          "qty": 1,
+          "unit": "cabeza",
+          "family": "Verdura",
+          "approxPrice": 1.4
+        },
+        {
+          "name": "Ajo",
+          "qty": 2,
+          "unit": "dientes",
+          "family": "Verdura",
+          "approxPrice": 0.05
+        },
+        {
+          "name": "Piñones",
+          "qty": 25,
+          "unit": "g",
+          "family": "Frutos secos",
+          "approxPrice": 0.8
+        },
+        {
+          "name": "Levadura de cerveza",
+          "qty": 2,
+          "unit": "cucharadas",
+          "family": "Despensa",
+          "approxPrice": 0.2
+        },
+        {
+          "name": "Aceite de oliva",
+          "qty": 200,
+          "unit": "ml",
+          "family": "Despensa",
+          "approxPrice": 0.8
+        }
+      ]
+    },
+    {
+      "name": "Queso untable vegano a las hierbas",
+      "qty": 0,
+      "unit": "tarrinas",
+      "pack": "Vacaloura - Aperitivos veganos",
+      "category": "Aperitivos",
+      "tags": [
+        "vegana",
+        "tofu",
+        "untable",
+        "rápida"
+      ],
+      "prepTime": "10 min",
+      "difficulty": "Fácil",
+      "approxPrice": 2.2,
+      "notes": "Procedimiento: bate tofu suave con nata vegetal, levadura nutricional, limón, sal, hierbas y un poco de aceite hasta lograr una crema densa para untar. Ajusta especias y acidez al gusto. Conservación: al llevar tofu abierto, consúmelo pronto y mantenlo siempre refrigerado.",
+      "ingredients": [
+        {
+          "name": "Tofu suave",
+          "qty": 400,
+          "unit": "g",
+          "family": "Proteína vegetal",
+          "approxPrice": 1.8
+        },
+        {
+          "name": "Nata vegetal para cocinar",
+          "qty": 3,
+          "unit": "cucharadas",
+          "family": "Despensa",
+          "approxPrice": 0.3
+        },
+        {
+          "name": "Levadura nutricional",
+          "qty": 1,
+          "unit": "cucharada",
+          "family": "Despensa",
+          "approxPrice": 0.2
+        },
+        {
+          "name": "Zumo de limón",
+          "qty": 1,
+          "unit": "cucharadita",
+          "family": "Fruta",
+          "approxPrice": 0.05
+        },
+        {
+          "name": "Hierbas aromáticas",
+          "qty": 2,
+          "unit": "cucharaditas",
+          "family": "Especias",
+          "approxPrice": 0.1
+        },
+        {
+          "name": "Aceite de oliva",
+          "qty": 2,
+          "unit": "cucharaditas",
+          "family": "Despensa",
+          "approxPrice": 0.1
+        },
+        {
+          "name": "Sal",
+          "qty": 1,
+          "unit": "cucharadita",
+          "family": "Despensa",
+          "approxPrice": 0
+        }
+      ]
+    },
+    {
+      "name": "Tortilla vegana de verduras al ajo",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Vacaloura - Aperitivos veganos",
+      "category": "Aperitivos",
+      "tags": [
+        "vegana",
+        "harina de garbanzos",
+        "verdura",
+        "sin huevo"
+      ],
+      "prepTime": "25 min",
+      "difficulty": "Media",
+      "approxPrice": 2.0,
+      "notes": "Procedimiento: lamina calabacín y ajo, pica tomate y reserva. Mezcla harina de garbanzo con agua, cúrcuma, pimienta, sal, levadura de cerveza y tomate. Sofríe ajo y calabacín; cuando esté tierno pero firme, añade la mezcla y cuaja a fuego bajo. Dale la vuelta como una tortilla. Conservación: se puede refrigerar y recalentar suavemente.",
+      "ingredients": [
+        {
+          "name": "Calabacín",
+          "qty": 0.5,
+          "unit": "unidad",
+          "family": "Verdura",
+          "approxPrice": 0.5
+        },
+        {
+          "name": "Tomate",
+          "qty": 1,
+          "unit": "unidad",
+          "family": "Verdura",
+          "approxPrice": 0.4
+        },
+        {
+          "name": "Ajo",
+          "qty": 2,
+          "unit": "dientes",
+          "family": "Verdura",
+          "approxPrice": 0.05
+        },
+        {
+          "name": "Harina de garbanzos",
+          "qty": 4,
+          "unit": "cucharadas",
+          "family": "Legumbre",
+          "approxPrice": 0.3
+        },
+        {
+          "name": "Agua",
+          "qty": 8,
+          "unit": "cucharadas",
+          "family": "Despensa",
+          "approxPrice": 0
+        },
+        {
+          "name": "Levadura de cerveza",
+          "qty": 1,
+          "unit": "cucharada",
+          "family": "Despensa",
+          "approxPrice": 0.1
+        },
+        {
+          "name": "Cúrcuma",
+          "qty": 1,
+          "unit": "pizca",
+          "family": "Especias",
+          "approxPrice": 0.05
+        },
+        {
+          "name": "Aceite de oliva",
+          "qty": 1,
+          "unit": "cucharada",
+          "family": "Despensa",
+          "approxPrice": 0.1
+        },
+        {
+          "name": "Sal y pimienta",
+          "qty": 1,
+          "unit": "al gusto",
+          "family": "Especias",
+          "approxPrice": 0
+        }
+      ]
+    },
+    {
+      "name": "Triángulos de espinacas",
+      "qty": 0,
+      "unit": "unidades",
+      "pack": "Vacaloura - Aperitivos veganos",
+      "category": "Aperitivos",
+      "tags": [
+        "vegana",
+        "horno",
+        "espinacas",
+        "aperitivo"
+      ],
+      "prepTime": "40 min",
+      "difficulty": "Media",
+      "approxPrice": 3.0,
+      "notes": "Procedimiento: sofríe cebolla hasta que esté transparente, añade espinacas, sal, piñones, pasas y ajo en polvo. Retira del fuego y mezcla con limón. Corta pasta filo en tiras, rellena y pliega formando triángulos. Pinta con aceite, añade sésamo y hornea a 180 ºC hasta dorar. Conservación: mejor recién horneados, aunque se pueden recalentar en horno.",
+      "ingredients": [
+        {
+          "name": "Pasta filo",
+          "qty": 3,
+          "unit": "hojas",
+          "family": "Despensa",
+          "approxPrice": 1.2
+        },
+        {
+          "name": "Espinacas frescas",
+          "qty": 400,
+          "unit": "g",
+          "family": "Verdura",
+          "approxPrice": 1.4
+        },
+        {
+          "name": "Cebolla",
+          "qty": 0.5,
+          "unit": "unidad",
+          "family": "Verdura",
+          "approxPrice": 0.15
+        },
+        {
+          "name": "Ajo en polvo",
+          "qty": 1,
+          "unit": "al gusto",
+          "family": "Especias",
+          "approxPrice": 0.05
+        },
+        {
+          "name": "Pasas",
+          "qty": 40,
+          "unit": "g",
+          "family": "Frutos secos",
+          "approxPrice": 0.25
+        },
+        {
+          "name": "Piñones",
+          "qty": 15,
+          "unit": "g",
+          "family": "Frutos secos",
+          "approxPrice": 0.45
+        },
+        {
+          "name": "Zumo de limón",
+          "qty": 1,
+          "unit": "cucharada",
+          "family": "Fruta",
+          "approxPrice": 0.05
+        },
+        {
+          "name": "Sésamo",
+          "qty": 1,
+          "unit": "cucharada",
+          "family": "Semillas",
+          "approxPrice": 0.1
+        },
+        {
+          "name": "Aceite de oliva",
+          "qty": 1,
+          "unit": "cucharada",
+          "family": "Despensa",
+          "approxPrice": 0.1
+        },
+        {
+          "name": "Sal",
+          "qty": 1,
+          "unit": "pizca",
+          "family": "Despensa",
+          "approxPrice": 0
+        }
+      ]
+    },
+    {
+      "name": "Empanadillas capresas veganas",
+      "qty": 0,
+      "unit": "unidades",
+      "pack": "Vacaloura - Aperitivos veganos",
+      "category": "Aperitivos",
+      "tags": [
+        "vegana",
+        "horno",
+        "masa casera",
+        "aperitivo"
+      ],
+      "prepTime": "1 h 45 min",
+      "difficulty": "Media",
+      "approxPrice": 4.0,
+      "notes": "Procedimiento: prepara un pesto triturando menta, piñones, ajo, levadura y aceite. Amasa harina integral con agua, vino blanco, aceite y sal; deja reposar. Mezcla tomate, aceitunas, mozzarella vegana y pesto. Estira porciones de masa, rellena, cierra con tenedor, pincha y hornea a 180 ºC hasta dorar. Conservación: deja enfriar antes de guardar; recalienta en horno para recuperar textura.",
+      "ingredients": [
+        {
+          "name": "Harina de trigo integral",
+          "qty": 250,
+          "unit": "g",
+          "family": "Despensa",
+          "approxPrice": 0.4
+        },
+        {
+          "name": "Agua",
+          "qty": 60,
+          "unit": "ml",
+          "family": "Despensa",
+          "approxPrice": 0
+        },
+        {
+          "name": "Vino blanco",
+          "qty": 40,
+          "unit": "ml",
+          "family": "Despensa",
+          "approxPrice": 0.2
+        },
+        {
+          "name": "Aceite de girasol",
+          "qty": 60,
+          "unit": "ml",
+          "family": "Despensa",
+          "approxPrice": 0.2
+        },
+        {
+          "name": "Tomate",
+          "qty": 1,
+          "unit": "unidad",
+          "family": "Verdura",
+          "approxPrice": 0.4
+        },
+        {
+          "name": "Mozzarella vegana",
+          "qty": 100,
+          "unit": "g",
+          "family": "Proteína vegetal",
+          "approxPrice": 1.5
+        },
+        {
+          "name": "Aceitunas negras",
+          "qty": 10,
+          "unit": "unidades",
+          "family": "Despensa",
+          "approxPrice": 0.3
+        },
+        {
+          "name": "Pesto vegano",
+          "qty": 1,
+          "unit": "cucharada",
+          "family": "Despensa",
+          "approxPrice": 0.2
+        },
+        {
+          "name": "Menta fresca",
+          "qty": 25,
+          "unit": "g",
+          "family": "Especias",
+          "approxPrice": 0.4
+        },
+        {
+          "name": "Piñones",
+          "qty": 25,
+          "unit": "g",
+          "family": "Frutos secos",
+          "approxPrice": 0.8
+        },
+        {
+          "name": "Ajo",
+          "qty": 2,
+          "unit": "dientes",
+          "family": "Verdura",
+          "approxPrice": 0.05
+        },
+        {
+          "name": "Levadura de cerveza",
+          "qty": 1,
+          "unit": "cucharada",
+          "family": "Despensa",
+          "approxPrice": 0.1
+        },
+        {
+          "name": "Aceite de oliva",
+          "qty": 50,
+          "unit": "g",
+          "family": "Despensa",
+          "approxPrice": 0.3
+        },
+        {
+          "name": "Sal y pimienta",
+          "qty": 1,
+          "unit": "al gusto",
+          "family": "Especias",
+          "approxPrice": 0
+        }
+      ]
+    },
+    {
+      "name": "Emparedado de setas con teriyaki",
+      "qty": 0,
+      "unit": "raciones",
+      "pack": "Vacaloura - Aperitivos veganos",
+      "category": "Aperitivos",
+      "tags": [
+        "vegana",
+        "bocadillo",
+        "setas",
+        "rápida"
+      ],
+      "prepTime": "1 h 15 min",
+      "difficulty": "Fácil",
+      "approxPrice": 2.4,
+      "notes": "Procedimiento: marina las setas con salsa teriyaki y pimienta durante una hora. Cocínalas a la plancha con su marinada. Tuesta pan y monta el emparedado con lechuga, zanahoria, apio en tiras, brotes de soja y setas calientes. Conservación: conviene montar justo antes de comer para que el pan no se humedezca.",
+      "ingredients": [
+        {
+          "name": "Pan de molde",
+          "qty": 2,
+          "unit": "rebanadas",
+          "family": "Despensa",
+          "approxPrice": 0.2
+        },
+        {
+          "name": "Setas",
+          "qty": 4,
+          "unit": "unidades",
+          "family": "Verdura",
+          "approxPrice": 1.0
+        },
+        {
+          "name": "Lechuga",
+          "qty": 1,
+          "unit": "hoja",
+          "family": "Verdura",
+          "approxPrice": 0.1
+        },
+        {
+          "name": "Zanahoria",
+          "qty": 0.25,
+          "unit": "unidad",
+          "family": "Verdura",
+          "approxPrice": 0.05
+        },
+        {
+          "name": "Apio",
+          "qty": 1,
+          "unit": "rama",
+          "family": "Verdura",
+          "approxPrice": 0.2
+        },
+        {
+          "name": "Brotes de soja",
+          "qty": 1,
+          "unit": "cucharada",
+          "family": "Verdura",
+          "approxPrice": 0.15
+        },
+        {
+          "name": "Salsa teriyaki",
+          "qty": 2,
+          "unit": "cucharadas",
+          "family": "Despensa",
+          "approxPrice": 0.2
+        },
+        {
+          "name": "Pimienta",
+          "qty": 1,
+          "unit": "pizca",
+          "family": "Especias",
+          "approxPrice": 0
+        }
+      ]
+    }
+  ]
+}

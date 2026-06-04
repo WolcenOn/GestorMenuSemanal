@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tests · Stock lifecycle</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 840px; margin: 40px auto; padding: 0 16px; color: #12302b; }
+    .ok { color: #157347; }
+    .fail { color: #c24141; }
+    li { margin: 8px 0; }
+    code { background: #eefaf6; padding: 2px 5px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>Tests de caducidad, congelado y puntuación de desperdicio</h1>
+  <p>Abre este archivo desde GitHub Pages o en local. Si todos los puntos salen en verde, la lógica base está funcionando.</p>
+  <ul id="results"></ul>
+  <p id="summary"></p>
+
+  <script src="../stock-lifecycle.js"></script>
+  <script>
+    const results = StockLifecycle.runSelfTests();
+    const list = document.getElementById("results");
+    const summary = document.getElementById("summary");
+
+    results.forEach(result => {
+      const li = document.createElement("li");
+      li.className = result.ok ? "ok" : "fail";
+      li.textContent = `${result.ok ? "✓" : "✗"} ${result.message}`;
+      list.appendChild(li);
+    });
+
+    const passed = results.filter(result => result.ok).length;
+    summary.innerHTML = `<strong>${passed}/${results.length}</strong> tests superados.`;
+
+    if (passed !== results.length) {
+      throw new Error("Algún test de StockLifecycle ha fallado");
+    }
+  </script>
+</body>
+</html>
