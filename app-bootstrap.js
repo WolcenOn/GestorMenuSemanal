@@ -16,7 +16,8 @@
     "unit-normalization.js",
     "pack-preview-fix.js",
     "shopping-ui-bridge.js",
-    "ux-dashboard.js"
+    "ux-dashboard.js",
+    "mvp-insights.js"
   ];
 
   function alreadyLoaded(src) {
@@ -27,7 +28,7 @@
     return new Promise((resolve, reject) => {
       if (alreadyLoaded(src)) return resolve({ src, ok: true, skipped: true });
       const script = document.createElement("script");
-      script.src = `${src}?v=20260604-11`;
+      script.src = `${src}?v=20260604-mvp-insights`;
       script.defer = false;
       script.onload = () => resolve({ src, ok: true });
       script.onerror = () => reject(new Error(`No se pudo cargar ${src}`));
@@ -61,6 +62,7 @@
     document.dispatchEvent(new CustomEvent("planificador:modules-ready", { detail: { modules, optionalResults } }));
     if (window.UiSafetyNet && typeof window.UiSafetyNet.install === "function") window.UiSafetyNet.install();
     if (window.UxDashboard && typeof window.UxDashboard.install === "function") window.UxDashboard.install();
+    if (window.MvpInsights && typeof window.MvpInsights.install === "function") window.MvpInsights.install();
   }
 
   loadAll().catch(error => {
