@@ -104,15 +104,27 @@
     document.head.appendChild(style);
   }
 
+  function activatePurchaseTab() {
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.tab === "purchase-mode"));
+    document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.toggle("active", panel.id === "panel-purchase-mode"));
+  }
+
   function addTab() {
     const tabs = document.querySelector(".tabs");
-    if (!tabs || tabs.querySelector('[data-tab="purchase-mode"]')) return;
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "tab-btn";
-    btn.dataset.tab = "purchase-mode";
-    btn.textContent = "Modo compra";
-    tabs.appendChild(btn);
+    if (!tabs) return;
+    let btn = tabs.querySelector('[data-tab="purchase-mode"]');
+    if (!btn) {
+      btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "tab-btn";
+      btn.dataset.tab = "purchase-mode";
+      btn.textContent = "Modo compra";
+      tabs.appendChild(btn);
+    }
+    if (!btn.dataset.purchaseModeReady) {
+      btn.dataset.purchaseModeReady = "1";
+      btn.addEventListener("click", activatePurchaseTab);
+    }
   }
 
   function addPanel() {
