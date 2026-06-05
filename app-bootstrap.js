@@ -15,11 +15,4 @@
     "index-hardening.js",
     "unit-normalization.js",
     "pack-preview-fix.js",
-    "shopping-ui-bridge.js",
-    "ux-dashboard.js",
-    "mvp-insights.js",
-    "purchase-mode.js"
-  ];
-
-  function alreadyLoaded(src) {
-    return Array.from
+    "
