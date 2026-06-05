@@ -63,6 +63,7 @@
     if (window.UiSafetyNet && typeof window.UiSafetyNet.install === "function") window.UiSafetyNet.install();
     if (window.UxDashboard && typeof window.UxDashboard.install === "function") window.UxDashboard.install();
     if (window.MvpInsights && typeof window.MvpInsights.install === "function") window.MvpInsights.install();
+    if (window.PurchaseMode && typeof window.PurchaseMode.install === "function") window.PurchaseMode.install();
   }
 
   loadAll().catch(error => {
