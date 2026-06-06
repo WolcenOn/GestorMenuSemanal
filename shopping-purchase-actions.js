@@ -1,7 +1,7 @@
 (function attachShoppingPurchaseActions(global) {
   "use strict";
 
-  const MARKER = "SHOPPING_PURCHASE_ACTIONS_V2_NO_FLICKER";
+  const MARKER = "SHOPPING_PURCHASE_ACTIONS_V3_INLINE_LIST";
   const LS = {
     ingredients: "ingredients",
     entries: "purchaseEntries",
@@ -88,29 +88,45 @@
     return ingredients().find(item => Array.isArray(item.products) && item.products.some(product => String(product.barcode || "").trim() === code)) || null;
   }
 
+  function cleanText(text) {
+    return String(text || "").replace(/\s+/g, " ").trim();
+  }
+
+  function firstLabel(row) {
+    const strong = row.querySelector("strong");
+    if (strong && cleanText(strong.textContent)) return cleanText(strong.textContent);
+    const nameNode = row.querySelector(".item-name,[data-ingredient-name],[data-name]");
+    if (nameNode && cleanText(nameNode.textContent || nameNode.dataset.ingredientName || nameNode.dataset.name)) return cleanText(nameNode.textContent || nameNode.dataset.ingredientName || nameNode.dataset.name);
+    const clone = row.cloneNode(true);
+    clone.querySelectorAll("button,input,.purchase-actions,.badge").forEach(node => node.remove());
+    const text = cleanText(clone.textContent).split(/[·\n]/)[0];
+    return text.replace(/^☐\s*/, "").trim();
+  }
+
   function parseItemData(row) {
-    const name = row.querySelector("strong")?.textContent?.trim() || "";
-    const text = row.textContent || "";
-    let qty = 0;
-    let unit = "unidades";
+    const text = cleanText(row.textContent || "");
+    const explicit = row.dataset || {};
+    let name = explicit.ingredientName || explicit.name || firstLabel(row);
+    let qty = num(explicit.qty || explicit.missingQty || 0);
+    let unit = normalizeUnit(explicit.unit || "");
     const patterns = [
-      /falta\s+([\d.,]+)\s*([^\.·\n]+)/i,
-      /faltan\s+([\d.,]+)\s*([^\.·\n]+)/i,
-      /necesitas\s+([\d.,]+)\s*([^\.·\n]+)/i,
-      /comprar\s+([\d.,]+)\s*([^\.·\n]+)/i
+      /falta(?:n)?\s+([\d.,]+)\s*([^·\.\n]+)/i,
+      /necesitas\s+([\d.,]+)\s*([^·\.\n]+)/i,
+      /comprar\s+([\d.,]+)\s*([^·\.\n]+)/i,
+      /([\d.,]+)\s*(kg|g|gr|gramos|l|ml|ud|uds|unidad(?:es)?)/i
     ];
     for (const pattern of patterns) {
       const match = text.match(pattern);
       if (match) {
-        qty = num(match[1]);
-        unit = normalizeUnit(match[2]);
+        qty = qty || num(match[1]);
+        unit = unit || normalizeUnit(match[2]);
         break;
       }
     }
     const ingredient = findIngredientByName(name);
-    if (!qty && ingredient) qty = num(ingredient.packageQty || ingredient.qty || 1);
-    if (ingredient?.unit) unit = normalizeUnit(ingredient.unit);
-    return { name, qty: qty || 1, unit, ingredientId: ingredient?.id || "" };
+    if (!qty && ingredient) qty = num(ingredient.packageQty || 1);
+    if (!unit && ingredient?.unit) unit = normalizeUnit(ingredient.unit);
+    return { name, qty: qty || 1, unit: unit || "unidades", ingredientId: ingredient?.id || "" };
   }
 
   function injectStyles() {
@@ -118,9 +134,9 @@
     const style = document.createElement("style");
     style.id = "shoppingPurchaseActionsStyles";
     style.textContent = `
-      .purchase-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.purchase-actions button{padding:7px 9px;font-size:.82rem}.purchase-sheet-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:9998}.purchase-sheet{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);width:min(560px,calc(100% - 18px));max-height:90vh;overflow:auto;background:#fff;border:1px solid var(--border,#cfe7df);border-radius:18px;box-shadow:0 24px 60px rgba(15,23,42,.28);z-index:9999;padding:14px}.purchase-sheet h2{margin:0 0 8px}.purchase-sheet-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.purchase-sheet label{font-size:.85rem}.purchase-sheet .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.purchase-status{margin-top:8px;color:var(--muted,#5d7972);font-size:.9rem}.purchase-video{width:100%;max-height:220px;background:#111;border-radius:14px;margin-top:8px;display:none}.purchase-print-line{display:none}.shopping-item.shopping-purchase-ready{align-items:start}
+      .purchase-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.purchase-actions button{padding:7px 9px;font-size:.82rem}.purchase-sheet-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:9998}.purchase-sheet{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);width:min(560px,calc(100% - 18px));max-height:90vh;overflow:auto;background:#fff;border:1px solid var(--border,#cfe7df);border-radius:18px;box-shadow:0 24px 60px rgba(15,23,42,.28);z-index:9999;padding:14px}.purchase-sheet h2{margin:0 0 8px}.purchase-sheet-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.purchase-sheet label{font-size:.85rem}.purchase-sheet .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.purchase-status{margin-top:8px;color:var(--muted,#5d7972);font-size:.9rem}.purchase-video{width:100%;max-height:220px;background:#111;border-radius:14px;margin-top:8px;display:none}.purchase-print-line{display:none}.shopping-item.shopping-purchase-ready{align-items:start}.shopping-purchase-debug{margin:8px 0;color:var(--muted,#5d7972);font-size:.85rem}
       @media (max-width:680px){.purchase-sheet-grid{grid-template-columns:1fr}.purchase-sheet{bottom:0;border-radius:18px 18px 0 0;width:100%}}
-      @media print{#panel-shopping .actions,#panel-shopping .summary,#shoppingWeekInfo,.purchase-actions,.purchase-sheet,.purchase-sheet-backdrop,#shoppingList input,#shoppingList .badge,#shoppingList small{display:none!important}#shoppingList{display:block!important}#shoppingList .shopping-item{display:block!important;border:0!important;border-bottom:1px solid #ddd!important;box-shadow:none!important;background:#fff!important;padding:6px 0!important}#shoppingList .shopping-item>div{display:block!important}#shoppingList strong{font-size:12pt!important;color:#000!important}.purchase-print-line{display:inline!important;margin-left:8px;color:#000!important;font-size:12pt!important}.print-only{display:block!important}}
+      @media print{#panel-shopping .actions,#panel-shopping .summary,#shoppingWeekInfo,.purchase-actions,.purchase-sheet,.purchase-sheet-backdrop,#shoppingList input,#shoppingList .badge,#shoppingList small:not(.purchase-print-line){display:none!important}#shoppingList{display:block!important}#shoppingList .shopping-item{display:block!important;border:0!important;border-bottom:1px solid #ddd!important;box-shadow:none!important;background:#fff!important;padding:6px 0!important}#shoppingList .shopping-item>div{display:block!important}#shoppingList strong{font-size:12pt!important;color:#000!important}.purchase-print-line{display:inline!important;margin-left:8px;color:#000!important;font-size:12pt!important}.print-only{display:block!important}}
     `;
     document.head.appendChild(style);
   }
@@ -297,30 +313,32 @@
 
   function enhanceRow(row) {
     if (!row || row.dataset.purchaseActionsReady === "true") return;
-    const strong = row.querySelector("strong");
-    if (!strong) return;
     const data = parseItemData(row);
     if (!data.name) return;
     row.dataset.purchaseActionsReady = "true";
     row.classList.add("shopping-purchase-ready");
+    const labelTarget = row.querySelector("strong") || row.querySelector(".item-name") || row.firstElementChild || row;
     let printLine = row.querySelector(".purchase-print-line");
     if (!printLine) {
       printLine = document.createElement("small");
       printLine.className = "purchase-print-line";
-      strong.insertAdjacentElement("afterend", printLine);
+      labelTarget.insertAdjacentElement(labelTarget === row ? "afterbegin" : "afterend", printLine);
     }
     printLine.textContent = `— ${data.qty.toLocaleString("es-ES", { maximumFractionDigits: 2 })} ${data.unit}`;
-    const actions = document.createElement("div");
-    actions.className = "purchase-actions";
-    actions.innerHTML = `<button type="button" class="secondary" data-purchase-action="scan">Escanear</button><button type="button" class="ghost" data-purchase-action="manual">Añadir manual</button>`;
-    actions.addEventListener("click", (event) => {
-      const button = event.target.closest("button[data-purchase-action]");
-      if (!button) return;
-      event.preventDefault();
-      event.stopPropagation();
-      openSheet(parseItemData(row), button.dataset.purchaseAction === "scan");
-    });
-    const content = strong.closest("div") || row;
+    let actions = row.querySelector(":scope .purchase-actions");
+    if (!actions) {
+      actions = document.createElement("div");
+      actions.className = "purchase-actions";
+      actions.innerHTML = `<button type="button" class="secondary" data-purchase-action="scan">Escanear</button><button type="button" class="ghost" data-purchase-action="manual">Añadir manual</button>`;
+      actions.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-purchase-action]");
+        if (!button) return;
+        event.preventDefault();
+        event.stopPropagation();
+        openSheet(parseItemData(row), button.dataset.purchaseAction === "scan");
+      });
+    }
+    const content = row.querySelector("div:not(.purchase-actions)") || row;
     content.appendChild(actions);
   }
 
@@ -365,6 +383,8 @@
     ensureSheet();
     scheduleEnhance(120);
     observeShoppingList();
+    setTimeout(enhanceShoppingList, 700);
+    setTimeout(enhanceShoppingList, 1600);
     if (!document.documentElement.dataset.shoppingPurchaseDelegated) {
       document.documentElement.dataset.shoppingPurchaseDelegated = "true";
       document.addEventListener("click", event => {
@@ -379,4 +399,4 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", install);
   else install();
 })(typeof window !== "undefined" ? window : globalThis);
-// SHOPPING_PURCHASE_ACTIONS_READY_V2_NO_FLICKER
+// SHOPPING_PURCHASE_ACTIONS_READY_V3_INLINE_LIST
