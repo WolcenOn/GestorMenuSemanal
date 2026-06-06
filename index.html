@@ -404,6 +404,15 @@
 
     .calendar-controls .row { align-items: end; }
 
+    .shopping-inline-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .shopping-inline-actions button { padding: 6px 9px; font-size: 0.8rem; }
+    .shopping-bought { opacity: 0.72; background: #f0fdf4; border-color: #bbf7d0; }
+    .shopping-partial { background: #fffbeb; border-color: #fde68a; }
+    .shopping-line-main { display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; }
+    .shopping-line-main strong { font-size: 1rem; }
+    .shopping-remaining { font-weight: 700; color: #b45309; }
+    .shopping-complete { font-weight: 700; color: #047857; }
+
 
     .print-only { display: none; }
 
@@ -415,27 +424,34 @@
     }
 
     @media print {
-      body { background: white; color: #111827; }
-      header, .no-print, .tabs, #startup-error { display: none !important; }
+      @page { size: A4 portrait; margin: 10mm; }
+      body { background: white; color: #111827; font-size: 11pt; }
+      header, .no-print, .tabs, .calendar-controls, .shopping-actions, .shopping-inline-actions, .shopping-status-tools { display: none !important; }
       main { width: 100%; margin: 0; display: block; }
       .card { box-shadow: none; border: 0; padding: 0; }
-      .print-only { display: block; }
+      .print-only { display: none; }
       .tab-panel { display: none !important; }
       body.print-shopping #panel-shopping { display: block !important; }
-      body.print-shopping #shoppingSummary,
-      body.print-shopping #shoppingList,
-      body.print-shopping #panel-shopping > .calendar-toolbar .actions { display: none !important; }
+      body.print-shopping #shoppingList, body.print-shopping #shoppingSummary, body.print-shopping #panel-shopping .calendar-toolbar .muted { display: none !important; }
       body.print-shopping #shoppingPrintList { display: block !important; }
+      body.print-shopping #shoppingPrintList table { width: 100%; border-collapse: collapse; font-size: 11pt; }
+      body.print-shopping #shoppingPrintList th, body.print-shopping #shoppingPrintList td { border-bottom: 1px solid #d1d5db; padding: 6px 4px; text-align: left; }
+      body.print-shopping #shoppingPrintList th:last-child, body.print-shopping #shoppingPrintList td:last-child { text-align: right; white-space: nowrap; }
+      body.print-week { font-size: 8.5pt; }
       body.print-week #panel-calendar { display: block !important; }
-      body.print-week #panel-calendar .calendar-controls,
-      body.print-week #panel-calendar .calendar-toolbar .actions { display: none !important; }
-      .shopping-print-table { width: 100%; border-collapse: collapse; font-size: 12pt; }
-      .shopping-print-table th,
-      .shopping-print-table td { border-bottom: 1px solid #d1d5db; padding: 6px 4px; text-align: left; }
-      .shopping-print-table th:last-child,
-      .shopping-print-table td:last-child { text-align: right; white-space: nowrap; }
-      .item, .shopping-item { break-inside: avoid; border: 0; margin-bottom: 4px; background: white; }
-      button, input[type="checkbox"], .shopping-row-actions { display: none !important; }
+      body.print-week .calendar-toolbar { margin-bottom: 6mm; }
+      body.print-week .calendar-toolbar .actions { display: none !important; }
+      body.print-week .calendar { display: grid !important; grid-template-columns: repeat(7, 1fr); gap: 3mm; align-items: stretch; }
+      body.print-week .day { border: 1px solid #d1d5db; border-radius: 0; padding: 3mm; break-inside: avoid; min-height: 120mm; background: white; }
+      body.print-week .day h3 { margin: 0 0 3mm; font-size: 10pt; text-align: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 2mm; }
+      body.print-week .meal-block { margin: 0 0 3mm; padding: 0; border: 0; background: transparent; }
+      body.print-week .meal-title { display: block; font-weight: 700; font-size: 8.5pt; margin-bottom: 1mm; }
+      body.print-week .member-slot { margin: 0 0 1.5mm; padding: 0; border: 0; }
+      body.print-week .member-slot label { display: block; font-size: 7.5pt; color: #6b7280; margin: 0; }
+      body.print-week .member-slot select, body.print-week .selected-dish-row button { display: none !important; }
+      body.print-week .selected-dishes { display: block; margin: 0; }
+      body.print-week .selected-dish-row { display: block; margin: 0 0 1mm; }
+      body.print-week .badge { display: inline; border: 0; padding: 0; background: transparent !important; color: #111827; font-size: 8pt; white-space: normal; }
     }
   </style>
 </head>
@@ -844,7 +860,7 @@
       </div>
       <div class="summary" id="shoppingSummary"></div>
       <div id="shoppingList" class="list"></div>
-      <div id="shoppingPrintList" class="print-only"></div>
+      <div id="shoppingPrintList" class="shopping-print-list print-only"></div>
     </section>
 
     <section id="panel-backup" class="tab-panel card">
@@ -2115,13 +2131,172 @@ Tema del pack: [ESCRIBE AQUÍ EL TEMA: cenas rápidas, mediterránea, diabetes, 
       });
     }
 
+    function getShoppingProgressKey() {
+      return `shoppingPurchaseProgress:${activeWeekId || "default"}`;
+    }
+
+    function getShoppingProgress() {
+      try {
+        const value = JSON.parse(localStorage.getItem(getShoppingProgressKey()) || "{}");
+        return value && typeof value === "object" ? value : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveShoppingProgress(progress) {
+      localStorage.setItem(getShoppingProgressKey(), JSON.stringify(progress || {}));
+    }
+
+    function getShoppingPurchaseLots() {
+      try { return JSON.parse(localStorage.getItem("purchaseLots") || "[]") || []; }
+      catch { return []; }
+    }
+
+    function getShoppingPurchaseEntries() {
+      try { return JSON.parse(localStorage.getItem("purchaseEntries") || "[]") || []; }
+      catch { return []; }
+    }
+
+    function normalizeShoppingUnit(unit) {
+      const clean = String(unit || "").trim().toLowerCase();
+      if (["kg", "kilo", "kilos"].includes(clean)) return "kg";
+      if (["g", "gr", "gramo", "gramos"].includes(clean)) return "g";
+      if (["l", "litro", "litros"].includes(clean)) return "l";
+      if (["ml", "mililitro", "mililitros"].includes(clean)) return "ml";
+      if (["ud", "uds", "unidad", "unidades", "u"].includes(clean)) return "unidades";
+      return clean || "unidades";
+    }
+
+    function parseShoppingNumber(value) {
+      const number = Number(String(value || "").replace(",", "."));
+      return Number.isFinite(number) && number > 0 ? number : 0;
+    }
+
+    function findShoppingItemForIngredient(ingredientId) {
+      return computeShoppingList().find(item => item.ingredient.id === ingredientId) || null;
+    }
+
+    function addBarcodeToIngredientFromShopping(ingredient, barcode, qty, unit) {
+      const clean = String(barcode || "").trim();
+      if (!clean) return;
+      const owner = ingredients.find(item => (item.products || []).some(product => String(product.barcode || "") === clean));
+      if (owner && owner.id !== ingredient.id) {
+        alert(`Ese código ya está asociado a ${owner.name}.`);
+        return;
+      }
+      ingredient.products = Array.isArray(ingredient.products) ? ingredient.products : [];
+      const existing = ingredient.products.find(product => String(product.barcode || "") === clean);
+      if (existing) return;
+      const brand = prompt("Marca o descripción del producto", "") || "";
+      const packageQty = parseShoppingNumber(prompt("Cantidad del envase", qty || "")) || qty || 0;
+      const packageUnit = normalizeShoppingUnit(prompt("Unidad del envase", unit || ingredient.unit || "unidades") || unit || ingredient.unit || "unidades");
+      const comparable = ingredient.products.find(product => normalizeShoppingUnit(product.packageUnit) === packageUnit && Math.abs(Number(product.packageQty || 0) - packageQty) < 0.0001);
+      if (!comparable && ingredient.products.length) {
+        const ok = confirm("Este envase no coincide con los productos ya asociados. ¿Guardarlo como variante para este ingrediente?");
+        if (!ok) return;
+      }
+      ingredient.products.push(normalizeProduct({ barcode: clean, brand, packageQty, packageUnit, price: 0, source: "shopping-list" }));
+    }
+
+    function registerShoppingPurchase(ingredientId, options = {}) {
+      const ingredient = ingredients.find(item => item.id === ingredientId);
+      if (!ingredient) return alert("No encuentro el ingrediente.");
+      const shoppingItem = findShoppingItemForIngredient(ingredientId);
+      const defaultQty = shoppingItem ? shoppingItem.missingQty : 1;
+      const qty = parseShoppingNumber(options.qty ?? prompt(`Cantidad comprada de ${ingredient.name}`, formatNumber(defaultQty)));
+      if (!qty) return;
+      const unit = normalizeShoppingUnit(options.unit || ingredient.unit || "unidades");
+      const barcode = String(options.barcode || "").trim();
+      if (barcode) addBarcodeToIngredientFromShopping(ingredient, barcode, qty, unit);
+
+      ingredient.qty = (Number(ingredient.qty) || 0) + qty;
+      ingredient.unit = ingredient.unit || unit;
+      ingredient.available = true;
+
+      const dateType = prompt("Tipo de fecha: caducidad, preferente o vacío", "preferente") || "";
+      const expiryDate = prompt("Fecha de caducidad/consumo preferente (AAAA-MM-DD). Puedes dejarlo vacío.", "") || "";
+      const storageType = prompt("Conservación: pantry, fridge o freezer", ingredient.storageType || "pantry") || ingredient.storageType || "pantry";
+      if (expiryDate) ingredient.expiryDate = expiryDate;
+      ingredient.storageType = storageType;
+
+      const now = new Date().toISOString();
+      const lot = { id: createId(), ingredientId, ingredientName: ingredient.name, qty, unit, barcode, dateType, expiryDate, storageType, createdAt: now, source: "shopping-list" };
+      const lots = getShoppingPurchaseLots();
+      lots.push(lot);
+      localStorage.setItem("purchaseLots", JSON.stringify(lots.slice(-500)));
+      const entries = getShoppingPurchaseEntries();
+      entries.push({ ...lot, weekId: activeWeekId, weekName: getActiveWeek().name });
+      localStorage.setItem("purchaseEntries", JSON.stringify(entries.slice(-500)));
+
+      const progress = getShoppingProgress();
+      const current = progress[ingredientId] || { ingredientId, name: ingredient.name, unit, purchasedQty: 0 };
+      current.name = ingredient.name;
+      current.unit = unit;
+      current.purchasedQty = (Number(current.purchasedQty) || 0) + qty;
+      current.updatedAt = now;
+      progress[ingredientId] = current;
+      saveShoppingProgress(progress);
+      renderAll();
+    }
+
+    window.addShoppingManualPurchase = function(ingredientId) {
+      registerShoppingPurchase(ingredientId);
+    };
+
+    window.scanShoppingPurchase = function(ingredientId) {
+      const code = prompt("Escanea o escribe el código de barras. Puedes dejarlo vacío para continuar manualmente.", "") || "";
+      registerShoppingPurchase(ingredientId, { barcode: code });
+    };
+
+    window.clearShoppingPurchaseProgress = function(ingredientId) {
+      const progress = getShoppingProgress();
+      delete progress[ingredientId];
+      saveShoppingProgress(progress);
+      renderAll();
+    };
+
+    function buildShoppingPrintList(items) {
+      const target = document.getElementById("shoppingPrintList");
+      if (!target) return;
+      if (!items.length) {
+        target.innerHTML = '<p>No falta ningún ingrediente.</p>';
+        return;
+      }
+      target.innerHTML = `<h1>Lista de la compra</h1><table><thead><tr><th>Ingrediente</th><th>Cantidad</th></tr></thead><tbody>${items.map(item => `<tr><td>${escapeHtml(item.ingredient.name)}</td><td>${formatNumber(item.missingQty)} ${escapeHtml(item.ingredient.unit)}</td></tr>`).join("")}</tbody></table>`;
+    }
+
     function renderShopping() {
-      const items = computeShoppingList();
+      const baseItems = computeShoppingList();
+      const progress = getShoppingProgress();
+      const progressIds = new Set(Object.keys(progress));
+      const items = baseItems.map(item => ({ ...item, progress: progress[item.ingredient.id] || null, isBoughtOnly: false }));
+
+      progressIds.forEach(ingredientId => {
+        if (items.some(item => item.ingredient.id === ingredientId)) return;
+        const ingredient = ingredients.find(item => item.id === ingredientId);
+        const state = progress[ingredientId];
+        if (!ingredient || !state || !(Number(state.purchasedQty) > 0)) return;
+        items.push({
+          ingredient,
+          requiredQty: Number(state.purchasedQty) || 0,
+          availableQty: Number(ingredient.qty) || 0,
+          missingQty: 0,
+          bestProduct: bestProductForIngredient(ingredient),
+          estimatedCost: 0,
+          progress: state,
+          isBoughtOnly: true
+        });
+      });
+
       shoppingSummary.innerHTML = "";
-      const totalCost = items.reduce((sum, item) => sum + (item.estimatedCost || 0), 0);
+      const pendingItems = baseItems;
+      const totalCost = pendingItems.reduce((sum, item) => sum + (item.estimatedCost || 0), 0);
+      const purchasedCount = Object.values(progress).filter(item => Number(item.purchasedQty) > 0).length;
       const summaryItems = [
-        ["Productos a comprar", items.length],
-        ["Presupuesto estimado", formatCurrency(totalCost)],
+        ["Pendientes", pendingItems.length],
+        ["Comprados/parciales", purchasedCount],
+        ["Presupuesto pendiente", formatCurrency(totalCost)],
         ["Semana", getActiveWeek().name]
       ];
       summaryItems.forEach(([label, value]) => {
@@ -2131,141 +2306,38 @@ Tema del pack: [ESCRIBE AQUÍ EL TEMA: cenas rápidas, mediterránea, diabetes, 
         shoppingSummary.appendChild(div);
       });
 
+      buildShoppingPrintList(pendingItems);
       shoppingList.innerHTML = "";
       if (items.length === 0) {
         shoppingList.innerHTML = '<div class="empty">No falta ningún ingrediente para la planificación actual.</div>';
-        renderShoppingPrintList(items);
         return;
       }
-
       items.forEach(item => {
         const div = document.createElement("div");
-        div.className = "item shopping-item";
-        const ingredientId = escapeForAttr(item.ingredient.id);
-        const name = escapeHtml(item.ingredient.name);
-        const unit = escapeHtml(item.ingredient.unit);
-        const missing = formatNumber(item.missingQty);
-        const required = formatNumber(item.requiredQty);
-        const available = formatNumber(item.availableQty);
-        div.innerHTML = `
-          <input type="checkbox" aria-label="Marcar ${name} como comprado" />
+        const boughtQty = Number(item.progress?.purchasedQty || 0);
+        const isComplete = item.isBoughtOnly || item.missingQty <= 0.0001;
+        const isPartial = !isComplete && boughtQty > 0;
+        div.className = `item shopping-item ${isComplete ? "shopping-bought" : isPartial ? "shopping-partial" : ""}`;
+        const bestText = item.bestProduct ? `${item.bestProduct.brand || "Producto"} · ${formatNumber(item.bestProduct.packageQty)} ${item.bestProduct.packageUnit} · ${formatCurrency(item.bestProduct.price)}` : "Sin producto con precio; usa precio aprox. manual si existe.";
+        const statusText = isComplete
+          ? `<span class="shopping-complete">Comprado ${formatNumber(boughtQty || item.requiredQty)} ${escapeHtml(item.ingredient.unit)}</span>`
+          : isPartial
+            ? `<span class="shopping-remaining">Comprado ${formatNumber(boughtQty)} · faltan ${formatNumber(item.missingQty)} ${escapeHtml(item.ingredient.unit)}</span>`
+            : `<span class="shopping-remaining">Faltan ${formatNumber(item.missingQty)} ${escapeHtml(item.ingredient.unit)}</span>`;
+        div.innerHTML = `<input type="checkbox" ${isComplete ? "checked" : ""} disabled />
           <div>
-            <strong>${name}</strong>
-            <small>Comprar ${missing} ${unit}</small>
-            <small class="muted">Necesitas ${required} ${unit} · tienes ${available}</small>
-            <div class="actions no-print shopping-row-actions">
-              <button type="button" class="secondary" onclick="addShoppingIngredientToStock('${ingredientId}', 'scan')">Escanear</button>
-              <button type="button" class="ghost" onclick="addShoppingIngredientToStock('${ingredientId}', 'manual')">Añadir manual</button>
+            <div class="shopping-line-main"><strong>${escapeHtml(item.ingredient.name)}</strong>${statusText}</div>
+            <small>Necesitas ${formatNumber(item.requiredQty)} ${escapeHtml(item.ingredient.unit)} · tienes ${formatNumber(item.availableQty)}</small>
+            <small>${escapeHtml(bestText)}</small>
+            <div class="shopping-inline-actions no-print">
+              <button type="button" onclick="scanShoppingPurchase('${item.ingredient.id}')">Escanear</button>
+              <button type="button" class="secondary" onclick="addShoppingManualPurchase('${item.ingredient.id}')">Añadir manual</button>
+              ${item.progress ? `<button type="button" class="ghost" onclick="clearShoppingPurchaseProgress('${item.ingredient.id}')">Quitar marca</button>` : ""}
             </div>
           </div>
-          <span class="badge missing">${missing} ${unit}</span>`;
+          <span class="badge ${isComplete ? "favorite" : "missing"}">${isComplete ? "OK" : formatCurrency(item.estimatedCost)}</span>`;
         shoppingList.appendChild(div);
       });
-
-      renderShoppingPrintList(items);
-    }
-
-    function renderShoppingPrintList(items = computeShoppingList()) {
-      const target = document.getElementById("shoppingPrintList");
-      if (!target) return;
-      const weekName = getActiveWeek()?.name || "Semana";
-      if (!items.length) {
-        target.innerHTML = `<h1>Lista de la compra</h1><p>No falta ningún ingrediente para ${escapeHtml(weekName)}.</p>`;
-        return;
-      }
-      const rows = items.map(item => `
-        <tr>
-          <td>${escapeHtml(item.ingredient.name)}</td>
-          <td>${formatNumber(item.missingQty)} ${escapeHtml(item.ingredient.unit)}</td>
-        </tr>`).join("");
-      target.innerHTML = `
-        <h1>Lista de la compra</h1>
-        <p>${escapeHtml(weekName)}</p>
-        <table class="shopping-print-table">
-          <thead><tr><th>Ingrediente</th><th>Cantidad</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>`;
-    }
-
-    function addShoppingIngredientToStock(ingredientId, mode) {
-      const ingredient = ingredients.find(item => item.id === ingredientId);
-      if (!ingredient) return alert("No se ha encontrado el ingrediente.");
-      const currentItem = computeShoppingList().find(item => item.ingredient.id === ingredientId);
-      const suggestedQty = currentItem ? currentItem.missingQty : 0;
-      const qtyText = prompt(`Cantidad comprada de ${ingredient.name} (${ingredient.unit})`, suggestedQty ? String(formatNumber(suggestedQty)).replace(",", ".") : "");
-      if (qtyText === null) return;
-      const qty = Number(String(qtyText).replace(",", "."));
-      if (!Number.isFinite(qty) || qty <= 0) return alert("Introduce una cantidad válida.");
-      const expiryDate = prompt("Fecha de caducidad o consumo preferente (AAAA-MM-DD). Puedes dejarlo vacío.", "") || "";
-      const storageType = prompt("Conservación: pantry, fridge o freezer", ingredient.storageType || "pantry") || ingredient.storageType || "pantry";
-      let barcode = "";
-      if (mode === "scan") barcode = prompt("Escanea o escribe el código de barras. Puedes dejarlo vacío.", "") || "";
-      addPurchasedStock({ ingredient, qty, unit: ingredient.unit, barcode, expiryDate, storageType });
-    }
-
-    function addPurchasedStock({ ingredient, qty, unit, barcode, expiryDate, storageType }) {
-      ingredient.qty = (Number(ingredient.qty) || 0) + qty;
-      ingredient.unit = ingredient.unit || unit || "unidades";
-      ingredient.available = true;
-      ingredient.expiryDate = cleanDateString(expiryDate) || ingredient.expiryDate || "";
-      ingredient.storageType = normalizeStorageType(storageType, ingredient.storageType || "pantry");
-
-      if (barcode) {
-        ingredient.products = Array.isArray(ingredient.products) ? ingredient.products : [];
-        const exists = ingredient.products.some(product => String(product.barcode || "") === String(barcode));
-        if (!exists) {
-          ingredient.products.push(normalizeProduct({
-            barcode,
-            brand: prompt("Marca del producto. Opcional.", "") || "",
-            packageQty: qty,
-            packageUnit: ingredient.unit,
-            price: Number(prompt("Precio del producto. Opcional.", "") || 0) || 0,
-            source: "shopping-list"
-          }));
-        }
-      }
-
-      const lots = loadArray("purchaseLots", []);
-      lots.push({
-        id: createId(),
-        ingredientId: ingredient.id,
-        ingredientName: ingredient.name,
-        qty,
-        unit: ingredient.unit,
-        barcode,
-        expiryDate: cleanDateString(expiryDate),
-        storageType: ingredient.storageType,
-        createdAt: new Date().toISOString()
-      });
-      localStorage.setItem("purchaseLots", JSON.stringify(lots));
-
-      const entries = loadArray("purchaseEntries", []);
-      entries.push({
-        id: createId(),
-        ingredientId: ingredient.id,
-        ingredientName: ingredient.name,
-        qty,
-        unit: ingredient.unit,
-        barcode,
-        createdAt: new Date().toISOString()
-      });
-      localStorage.setItem("purchaseEntries", JSON.stringify(entries));
-
-      renderAll();
-      alert(`${ingredient.name} añadido al stock.`);
-    }
-
-    function printAppSection(section) {
-      const className = section === "week" ? "print-week" : "print-shopping";
-      document.body.classList.remove("print-week", "print-shopping");
-      document.body.classList.add(className);
-      if (section === "shopping") renderShoppingPrintList();
-      const cleanup = () => document.body.classList.remove("print-week", "print-shopping");
-      window.addEventListener("afterprint", cleanup, { once: true });
-      setTimeout(() => {
-        window.print();
-        setTimeout(cleanup, 1000);
-      }, 50);
     }
 
     function renderCurrentRecipe() {
@@ -2749,7 +2821,12 @@ Tema del pack: [ESCRIBE AQUÍ EL TEMA: cenas rápidas, mediterránea, diabetes, 
       }
     });
 
-    document.getElementById("printWeekBtn").addEventListener("click", () => printAppSection("week"));
+    document.getElementById("printWeekBtn").addEventListener("click", () => {
+      document.body.classList.remove("print-shopping");
+      document.body.classList.add("print-week");
+      window.addEventListener("afterprint", () => document.body.classList.remove("print-week"), { once: true });
+      window.print();
+    });
 
     document.getElementById("copyShoppingBtn").addEventListener("click", async () => {
       const items = computeShoppingList();
@@ -2764,7 +2841,13 @@ Tema del pack: [ESCRIBE AQUÍ EL TEMA: cenas rápidas, mediterránea, diabetes, 
       }
     });
 
-    document.getElementById("printShoppingBtn").addEventListener("click", () => printAppSection("shopping"));
+    document.getElementById("printShoppingBtn").addEventListener("click", () => {
+      buildShoppingPrintList(computeShoppingList());
+      document.body.classList.remove("print-week");
+      document.body.classList.add("print-shopping");
+      window.addEventListener("afterprint", () => document.body.classList.remove("print-shopping"), { once: true });
+      window.print();
+    });
 
     document.getElementById("shareShoppingBtn").addEventListener("click", async () => {
       const items = computeShoppingList();
@@ -3298,6 +3381,6 @@ Tema del pack: [ESCRIBE AQUÍ EL TEMA: cenas rápidas, mediterránea, diabetes, 
       scannerStatus.textContent = "Aviso: la cámara puede estar bloqueada porque esta página no está en HTTPS ni localhost. Puedes seguir usando códigos manuales.";
     }
   </script>
-  <script src="app-bootstrap.js?v=20260605-purchase-mode-v2"></script>
+  <script src="app-bootstrap.js?v=20260606-inline-shopping-v7"></script>
 </body>
 </html>

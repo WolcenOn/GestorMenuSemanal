@@ -28,7 +28,7 @@
     return new Promise((resolve, reject) => {
       if (alreadyLoaded(src)) return resolve({ src, ok: true, skipped: true });
       const script = document.createElement("script");
-      script.src = `${src}?v=20260606-inline-shopping-v6`;
+      script.src = `${src}?v=20260606-shopping-actions-v4-stable-panel`;
       script.defer = false;
       script.onload = () => resolve({ src, ok: true });
       script.onerror = () => reject(new Error(`No se pudo cargar ${src}`));
@@ -61,7 +61,6 @@
     if (window.UiSafetyNet && typeof window.UiSafetyNet.install === "function") window.UiSafetyNet.install();
     if (window.UxDashboard && typeof window.UxDashboard.install === "function") window.UxDashboard.install();
     if (window.MvpInsights && typeof window.MvpInsights.install === "function") window.MvpInsights.install();
-    if (window.ShoppingPurchaseActions && typeof window.ShoppingPurchaseActions.install === "function") window.ShoppingPurchaseActions.install();
   }
 
   loadAll().catch(error => {
