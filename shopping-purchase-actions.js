@@ -1,7 +1,7 @@
 (function attachShoppingPurchaseActions(global) {
   "use strict";
 
-  const MARKER = "SHOPPING_PURCHASE_ACTIONS_V1";
+  const MARKER = "SHOPPING_PURCHASE_ACTIONS_V2_NO_FLICKER";
   const LS = {
     ingredients: "ingredients",
     entries: "purchaseEntries",
@@ -10,6 +10,8 @@
   let observer = null;
   let scannerStream = null;
   let scannerTimer = null;
+  let enhanceTimer = null;
+  let enhancing = false;
 
   const $ = (id) => document.getElementById(id);
   const money = (value) => (Number(value) || 0).toLocaleString("es-ES", { style: "currency", currency: "EUR" });
@@ -289,10 +291,8 @@
     saveJson(LS.lots, [...lots(), lot]);
     status.textContent = `Añadido al stock: ${ingredient.name} · ${qty} ${unit}${price ? ` · ${money(price)}` : ""}`;
     document.dispatchEvent(new CustomEvent("planificador:stock-updated", { detail: { ingredientId: ingredient.id, source: "shopping-list" } }));
-    setTimeout(() => {
-      enhanceShoppingList();
-      if (typeof global.renderAll === "function") global.renderAll();
-    }, 100);
+    if (typeof global.renderAll === "function") global.renderAll();
+    scheduleEnhance(250);
   }
 
   function enhanceRow(row) {
@@ -325,31 +325,58 @@
   }
 
   function enhanceShoppingList() {
-    injectStyles();
+    if (enhancing) return;
+    enhancing = true;
+    try {
+      injectStyles();
+      const list = $("shoppingList");
+      if (!list) return;
+      if (observer) observer.disconnect();
+      list.querySelectorAll(".shopping-item").forEach(enhanceRow);
+      observeShoppingList();
+    } finally {
+      enhancing = false;
+    }
+  }
+
+  function scheduleEnhance(delay = 160) {
+    clearTimeout(enhanceTimer);
+    enhanceTimer = setTimeout(enhanceShoppingList, delay);
+  }
+
+  function observeShoppingList() {
     const list = $("shoppingList");
-    if (!list) return;
-    list.querySelectorAll(".shopping-item").forEach(enhanceRow);
+    if (!list || !("MutationObserver" in window)) return;
+    if (observer) observer.disconnect();
+    observer = new MutationObserver((mutations) => {
+      if (enhancing) return;
+      const relevant = mutations.some(mutation =>
+        Array.from(mutation.addedNodes || []).some(node =>
+          node.nodeType === 1 && (node.classList?.contains("shopping-item") || node.querySelector?.(".shopping-item"))
+        )
+      );
+      if (relevant) scheduleEnhance(180);
+    });
+    observer.observe(list, { childList: true });
   }
 
   function install() {
     injectStyles();
     ensureSheet();
-    enhanceShoppingList();
-    if (observer) observer.disconnect();
-    const list = $("shoppingList");
-    if (list && "MutationObserver" in window) {
-      observer = new MutationObserver(() => setTimeout(enhanceShoppingList, 30));
-      observer.observe(list, { childList: true, subtree: true });
+    scheduleEnhance(120);
+    observeShoppingList();
+    if (!document.documentElement.dataset.shoppingPurchaseDelegated) {
+      document.documentElement.dataset.shoppingPurchaseDelegated = "true";
+      document.addEventListener("click", event => {
+        const tab = event.target.closest && event.target.closest(".tab-btn[data-tab='shopping']");
+        if (tab) scheduleEnhance(260);
+      }, true);
+      document.addEventListener("planificador:modules-ready", () => scheduleEnhance(260));
     }
-    document.addEventListener("click", event => {
-      const tab = event.target.closest && event.target.closest(".tab-btn[data-tab='shopping']");
-      if (tab) setTimeout(enhanceShoppingList, 200);
-    }, true);
-    document.addEventListener("planificador:modules-ready", () => setTimeout(enhanceShoppingList, 200));
     global.ShoppingPurchaseActions = { marker: MARKER, install, enhanceShoppingList, openSheet };
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", install);
   else install();
 })(typeof window !== "undefined" ? window : globalThis);
-// SHOPPING_PURCHASE_ACTIONS_READY_V1
+// SHOPPING_PURCHASE_ACTIONS_READY_V2_NO_FLICKER
