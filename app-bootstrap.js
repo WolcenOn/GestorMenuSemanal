@@ -29,7 +29,7 @@
     return new Promise((resolve, reject) => {
       if (alreadyLoaded(src)) return resolve({ src, ok: true, skipped: true });
       const script = document.createElement("script");
-      script.src = `${src}?v=20260606-shopping-actions-v3-inline-list`;
+      script.src = `${src}?v=20260606-shopping-actions-v4-stable-panel`;
       script.defer = false;
       script.onload = () => resolve({ src, ok: true });
       script.onerror = () => reject(new Error(`No se pudo cargar ${src}`));
