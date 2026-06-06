@@ -333,6 +333,41 @@
 
     .shopping-item input { width: auto; margin-top: 4px; }
     .shopping-item small { color: var(--muted); display: block; margin-top: 3px; }
+    .shopping-line-main { min-width: 0; }
+    .shopping-print-line { font-weight: 700; }
+    .shopping-purchase-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .shopping-purchase-actions button {
+      padding: 5px 8px;
+      font-size: 0.78rem;
+    }
+    .shopping-scanner-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(15, 23, 42, 0.92);
+      display: grid;
+      place-items: center;
+      padding: 16px;
+    }
+    .shopping-scanner-card {
+      width: min(520px, 100%);
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.35);
+    }
+    .shopping-scanner-card video {
+      width: 100%;
+      max-height: 360px;
+      object-fit: cover;
+      border-radius: 14px;
+      background: #111827;
+    }
 
     .empty {
       padding: 14px;
@@ -421,8 +456,10 @@
       .card { box-shadow: none; border: 0; padding: 0; }
       .print-only { display: block; }
       #panel-shopping { display: block !important; }
+      #shoppingSummary, #panel-shopping .badge, #panel-shopping .shopping-screen-detail, #panel-shopping .shopping-purchase-actions { display: none !important; }
       #shoppingList { display: block; }
-      .item, .shopping-item { break-inside: avoid; border: 1px solid #d1d5db; margin-bottom: 8px; background: white; }
+      .item, .shopping-item { break-inside: avoid; border: 0; border-bottom: 1px solid #d1d5db; margin: 0; padding: 7px 0; background: white; display: block !important; }
+      .shopping-print-line { display: block !important; font-size: 12pt; font-weight: 700; }
       button, input[type="checkbox"] { display: none !important; }
     }
   </style>
@@ -2127,10 +2164,232 @@ Tema del pack: [ESCRIBE AQUÍ EL TEMA: cenas rápidas, mediterránea, diabetes, 
         const div = document.createElement("div");
         div.className = "item shopping-item";
         const bestText = item.bestProduct ? `${item.bestProduct.brand || "Producto"} · ${formatNumber(item.bestProduct.packageQty)} ${item.bestProduct.packageUnit} · ${formatCurrency(item.bestProduct.price)}` : "Sin producto con precio; usa precio aprox. manual si existe.";
-        div.innerHTML = `<input type="checkbox" /><div><strong>${escapeHtml(item.ingredient.name)}</strong><small>Necesitas ${formatNumber(item.requiredQty)} ${escapeHtml(item.ingredient.unit)} · tienes ${formatNumber(item.availableQty)} · falta ${formatNumber(item.missingQty)}</small><small>${escapeHtml(bestText)}</small></div><span class="badge missing">${formatCurrency(item.estimatedCost)}</span>`;
+        const unit = item.ingredient.unit || "unidades";
+        const missing = Number(item.missingQty) || 0;
+        div.innerHTML = `
+          <input type="checkbox" aria-label="Marcar ${escapeForAttr(item.ingredient.name)} como comprado" />
+          <div class="shopping-line-main">
+            <strong>${escapeHtml(item.ingredient.name)}</strong>
+            <div class="shopping-print-line">${escapeHtml(item.ingredient.name)} · ${formatNumber(missing)} ${escapeHtml(unit)}</div>
+            <small class="shopping-screen-detail">Necesitas ${formatNumber(item.requiredQty)} ${escapeHtml(unit)} · tienes ${formatNumber(item.availableQty)} · falta ${formatNumber(missing)} ${escapeHtml(unit)}</small>
+            <small class="shopping-screen-detail">${escapeHtml(bestText)}</small>
+            <div class="shopping-purchase-actions no-print">
+              <button type="button" class="secondary" onclick="shoppingScanEntry('${escapeForAttr(item.ingredient.id)}', ${missing}, '${escapeForAttr(unit)}')">Escanear</button>
+              <button type="button" class="ghost" onclick="shoppingManualEntry('${escapeForAttr(item.ingredient.id)}', ${missing}, '${escapeForAttr(unit)}')">Añadir manual</button>
+            </div>
+          </div>
+          <span class="badge missing">${formatCurrency(item.estimatedCost)}</span>`;
         shoppingList.appendChild(div);
       });
     }
+
+    function loadPurchaseLots() {
+      try { return JSON.parse(localStorage.getItem("purchaseLots") || "[]"); }
+      catch { return []; }
+    }
+
+    function savePurchaseLots(lots) {
+      localStorage.setItem("purchaseLots", JSON.stringify(Array.isArray(lots) ? lots : []));
+    }
+
+    function loadPurchaseEntries() {
+      try { return JSON.parse(localStorage.getItem("purchaseEntries") || "[]"); }
+      catch { return []; }
+    }
+
+    function savePurchaseEntries(entries) {
+      localStorage.setItem("purchaseEntries", JSON.stringify(Array.isArray(entries) ? entries : []));
+    }
+
+    function normalizePurchaseUnit(unit) {
+      const clean = String(unit || "").trim().toLowerCase();
+      if (["kg", "kilo", "kilos"].includes(clean)) return "kg";
+      if (["g", "gr", "gramo", "gramos"].includes(clean)) return "g";
+      if (["l", "litro", "litros"].includes(clean)) return "l";
+      if (["ml", "mililitro", "mililitros"].includes(clean)) return "ml";
+      if (["ud", "uds", "unidad", "unidades", "u"].includes(clean)) return "unidades";
+      return clean || "unidades";
+    }
+
+    function samePurchasePack(a, b) {
+      if (!a || !b) return false;
+      const unitA = normalizePurchaseUnit(a.packageUnit);
+      const unitB = normalizePurchaseUnit(b.packageUnit);
+      const qtyA = Number(a.packageQty) || 0;
+      const qtyB = Number(b.packageQty) || 0;
+      return unitA === unitB && Math.abs(qtyA - qtyB) < 0.01;
+    }
+
+    function askPurchaseDetails(defaultQty, defaultUnit) {
+      const qtyText = prompt("Cantidad comprada", formatNumber(defaultQty || 1).replace(".", "").replace(",", "."));
+      if (qtyText === null) return null;
+      const qty = Number(String(qtyText).replace(",", "."));
+      if (!Number.isFinite(qty) || qty <= 0) {
+        alert("Cantidad no válida.");
+        return null;
+      }
+      const unit = prompt("Unidad", defaultUnit || "unidades");
+      if (unit === null) return null;
+      const date = prompt("Fecha de caducidad o consumo preferente (AAAA-MM-DD). Déjalo vacío si no quieres guardarla.", "");
+      if (date === null) return null;
+      const isBestBefore = date ? confirm("¿Es consumo preferente? Aceptar = consumo preferente. Cancelar = caducidad.") : false;
+      const storage = prompt("Conservación: pantry, fridge o freezer", "pantry");
+      if (storage === null) return null;
+      const priceText = prompt("Precio pagado opcional. Déjalo vacío si no quieres guardarlo.", "");
+      if (priceText === null) return null;
+      return {
+        qty,
+        unit: normalizePurchaseUnit(unit),
+        date: String(date || "").trim(),
+        dateType: isBestBefore ? "bestBefore" : "expiry",
+        storageType: normalizeStorageType(storage || "pantry", "pantry"),
+        price: Number(String(priceText || "0").replace(",", ".")) || 0
+      };
+    }
+
+    function upsertPurchasedProduct(ingredient, barcode, details) {
+      const code = String(barcode || "").trim();
+      if (!code) return null;
+      ingredient.products = Array.isArray(ingredient.products) ? ingredient.products : [];
+      let existing = ingredient.products.find(product => String(product.barcode || "").trim() === code);
+      const proposed = normalizeProduct({
+        barcode: code,
+        brand: prompt("Marca o descripción del producto", "") || "",
+        packageQty: details.qty,
+        packageUnit: details.unit,
+        price: details.price,
+        source: "shopping-list"
+      });
+      if (existing) {
+        Object.assign(existing, { price: details.price || existing.price || 0, source: existing.source || "shopping-list" });
+        return existing;
+      }
+      const compatible = ingredient.products.some(product => samePurchasePack(product, proposed));
+      if (!compatible && ingredient.products.length) {
+        const ok = confirm("Este código tiene un peso/envase distinto a los productos ya asociados. ¿Guardarlo como variante del mismo ingrediente?");
+        if (!ok) return null;
+      }
+      ingredient.products.push(proposed);
+      return proposed;
+    }
+
+    function applyShoppingPurchase(ingredientId, details, barcode = "") {
+      const ingredient = ingredients.find(item => item.id === ingredientId);
+      if (!ingredient) return alert("No se encontró el ingrediente.");
+      if (barcode) {
+        const found = findBarcode(barcode);
+        if (found && found.ingredient.id !== ingredient.id) {
+          const ok = confirm(`Este código ya está asociado a "${found.ingredient.name}". ¿Quieres continuar con "${ingredient.name}"?`);
+          if (!ok) return;
+        }
+        upsertPurchasedProduct(ingredient, barcode, details);
+      }
+      ingredient.qty = (Number(ingredient.qty) || 0) + details.qty;
+      ingredient.unit = ingredient.unit || details.unit || "unidades";
+      ingredient.available = true;
+      if (details.date) ingredient.expiryDate = details.date;
+      ingredient.storageType = details.storageType || ingredient.storageType || "pantry";
+
+      const lot = {
+        id: createId(),
+        ingredientId: ingredient.id,
+        ingredientName: ingredient.name,
+        qty: details.qty,
+        unit: details.unit,
+        barcode: barcode || "",
+        date: details.date,
+        dateType: details.dateType,
+        storageType: details.storageType,
+        price: details.price,
+        createdAt: new Date().toISOString()
+      };
+      const lots = loadPurchaseLots();
+      lots.push(lot);
+      savePurchaseLots(lots);
+
+      const entries = loadPurchaseEntries();
+      entries.push({ ...lot, type: "shopping-list-purchase" });
+      savePurchaseEntries(entries.slice(-500));
+
+      renderAll();
+      alert(`Stock actualizado: ${ingredient.name} +${formatNumber(details.qty)} ${details.unit}`);
+    }
+
+    window.shoppingManualEntry = function(ingredientId, defaultQty, defaultUnit) {
+      const details = askPurchaseDetails(defaultQty, defaultUnit);
+      if (!details) return;
+      applyShoppingPurchase(ingredientId, details);
+    };
+
+    async function scanBarcodeWithCamera() {
+      if (!navigator.mediaDevices?.getUserMedia || !("BarcodeDetector" in window)) {
+        return prompt("Escaneo automático no disponible. Escribe o pega el código de barras:", "");
+      }
+
+      return new Promise(async resolve => {
+        const overlay = document.createElement("div");
+        overlay.className = "shopping-scanner-overlay";
+        overlay.innerHTML = `
+          <div class="shopping-scanner-card">
+            <h3>Escanear código</h3>
+            <p class="muted">Enfoca el código de barras. También puedes escribirlo manualmente.</p>
+            <video playsinline muted></video>
+            <div class="actions">
+              <button type="button" id="shoppingScannerManualBtn" class="ghost">Escribir código</button>
+              <button type="button" id="shoppingScannerCloseBtn" class="danger">Cancelar</button>
+            </div>
+            <div id="shoppingScannerStatus" class="muted">Iniciando cámara...</div>
+          </div>`;
+        document.body.appendChild(overlay);
+        const video = overlay.querySelector("video");
+        const status = overlay.querySelector("#shoppingScannerStatus");
+        let stream = null;
+        let timer = null;
+
+        const cleanup = value => {
+          if (timer) clearInterval(timer);
+          if (stream) stream.getTracks().forEach(track => track.stop());
+          overlay.remove();
+          resolve(value || "");
+        };
+
+        overlay.querySelector("#shoppingScannerCloseBtn").addEventListener("click", () => cleanup(""));
+        overlay.querySelector("#shoppingScannerManualBtn").addEventListener("click", () => cleanup(prompt("Código de barras:", "") || ""));
+
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
+          video.srcObject = stream;
+          await video.play();
+          const detector = new BarcodeDetector({ formats: ["ean_13", "ean_8", "upc_a", "upc_e", "code_128"] });
+          status.textContent = "Cámara activa. Enfoca el código.";
+          timer = setInterval(async () => {
+            try {
+              const codes = await detector.detect(video);
+              if (codes.length && codes[0].rawValue) cleanup(codes[0].rawValue);
+            } catch { /* frame ignored */ }
+          }, 800);
+        } catch (error) {
+          status.textContent = `No se pudo abrir la cámara: ${error.message}`;
+          const manual = prompt("No se pudo abrir la cámara. Escribe el código:", "");
+          cleanup(manual || "");
+        }
+      });
+    }
+
+    window.shoppingScanEntry = async function(ingredientId, defaultQty, defaultUnit) {
+      const barcode = String(await scanBarcodeWithCamera() || "").trim();
+      if (!barcode) return;
+      const found = findBarcode(barcode);
+      let qty = defaultQty;
+      let unit = defaultUnit;
+      if (found?.product?.packageQty) {
+        qty = found.product.packageQty;
+        unit = found.product.packageUnit || unit;
+      }
+      const details = askPurchaseDetails(qty, unit);
+      if (!details) return;
+      applyShoppingPurchase(ingredientId, details, barcode);
+    };
 
     function renderCurrentRecipe() {
       currentRecipeList.innerHTML = "";
@@ -3162,6 +3421,6 @@ Tema del pack: [ESCRIBE AQUÍ EL TEMA: cenas rápidas, mediterránea, diabetes, 
       scannerStatus.textContent = "Aviso: la cámara puede estar bloqueada porque esta página no está en HTTPS ni localhost. Puedes seguir usando códigos manuales.";
     }
   </script>
-  <script src="app-bootstrap.js?v=20260605-purchase-mode-v2"></script>
+  <script src="app-bootstrap.js?v=20260606-inline-shopping-v5"></script>
 </body>
 </html>
