@@ -18,7 +18,7 @@
     "shopping-ui-bridge.js",
     "ux-dashboard.js",
     "mvp-insights.js",
-    "purchase-mode.js"
+    "shopping-purchase-actions.js"
   ];
 
   function alreadyLoaded(src) {
@@ -29,7 +29,7 @@
     return new Promise((resolve, reject) => {
       if (alreadyLoaded(src)) return resolve({ src, ok: true, skipped: true });
       const script = document.createElement("script");
-      script.src = `${src}?v=20260605-purchase-list`;
+      script.src = `${src}?v=20260606-shopping-actions-v1`;
       script.defer = false;
       script.onload = () => resolve({ src, ok: true });
       script.onerror = () => reject(new Error(`No se pudo cargar ${src}`));
@@ -38,9 +38,7 @@
   }
 
   async function loadCritical() {
-    for (const module of criticalModules) {
-      await loadScript(module);
-    }
+    for (const module of criticalModules) await loadScript(module);
   }
 
   async function loadOptional() {
@@ -56,22 +54,7 @@
     return results;
   }
 
-
-  function installDynamicTabNavigation() {
-    if (window.__planificadorDynamicTabsReady) return;
-    window.__planificadorDynamicTabsReady = true;
-    document.addEventListener("click", event => {
-      const button = event.target && event.target.closest ? event.target.closest(".tab-btn[data-tab]") : null;
-      if (!button || !document.body.contains(button)) return;
-      const tabName = button.dataset.tab;
-      if (!tabName) return;
-      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.tab === tabName));
-      document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.toggle("active", panel.id === `panel-${tabName}`));
-    });
-  }
-
   async function loadAll() {
-    installDynamicTabNavigation();
     await loadCritical();
     const optionalResults = await loadOptional();
     const modules = [...criticalModules, ...optionalModules];
@@ -79,7 +62,7 @@
     if (window.UiSafetyNet && typeof window.UiSafetyNet.install === "function") window.UiSafetyNet.install();
     if (window.UxDashboard && typeof window.UxDashboard.install === "function") window.UxDashboard.install();
     if (window.MvpInsights && typeof window.MvpInsights.install === "function") window.MvpInsights.install();
-    if (window.PurchaseMode && typeof window.PurchaseMode.install === "function") window.PurchaseMode.install();
+    if (window.ShoppingPurchaseActions && typeof window.ShoppingPurchaseActions.install === "function") window.ShoppingPurchaseActions.install();
   }
 
   loadAll().catch(error => {
